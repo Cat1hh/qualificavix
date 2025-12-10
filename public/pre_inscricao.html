@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Pré-inscrição</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f7f7f7;
+        }
+
+        .container {
+            max-width: 650px;
+            margin: 40px auto;
+            padding: 25px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #222;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 18px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 15px;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: #007bff;
+            border: none;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 17px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        .sucesso {
+            padding: 15px;
+            background: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+            margin-top: 15px;
+            border-radius: 6px;
+        }
+
+        .erro {
+            padding: 15px;
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+            margin-top: 15px;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Pré-inscrição no Curso</h2>
+<h3 id="cursoTitulo" style="text-align:center; color:#444; margin-top:-10px;"></h3>
+
+
+    <form id="formPre">
+        <input type="hidden" id="curso_id">
+
+        <label>Nome completo</label>
+        <input type="text" id="nome" required>
+
+        <label>Idade</label>
+        <input type="number" id="idade" min="1" required>
+
+        <label>Nome do responsável (se menor)</label>
+        <input type="text" id="responsavel">
+
+        <label>Telefone de contato</label>
+        <input type="text" id="telefone" required>
+
+        <label>Email</label>
+        <input type="email" id="email" required>
+
+        <label>Observações</label>
+        <textarea id="obs" rows="4"></textarea>
+
+        <button type="submit">Enviar Pré-inscrição</button>
+    </form>
+
+    <div id="msg"></div>
+</div>
+
+<script>
+    // ---------- PEGAR ID DO CURSO DA URL ----------
+    const params = new URLSearchParams(window.location.search);
+    const cursoID = params.get("id");
+
+    if (cursoID) {
+        document.getElementById("curso_id").value = cursoID;
+        carregarNomeDoCurso(cursoID);
+    }
+
+    // ---------- BUSCAR NOME DO CURSO NO SERVIDOR ----------
+    async function carregarNomeDoCurso(id) {
+        try {
+            const req = await fetch("http://localhost:3000/cursos");
+            const cursos = await req.json();
+
+            const curso = cursos.find(c => c.id == id);
+
+            if (curso) {
+                document.getElementById("cursoTitulo").innerText = curso.nome;
+            } else {
+                document.getElementById("cursoTitulo").innerText = "Curso não encontrado";
+            }
+        } catch (err) {
+            document.getElementById("cursoTitulo").innerText = "Erro ao carregar curso";
+        }
+    }
+
+    // ---------- FORMULÁRIO ----------
+    const form = document.getElementById("formPre");
+    const msg = document.getElementById("msg");
+
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const dados = {
+            curso_id: document.getElementById("curso_id").value,
+            nome: document.getElementById("nome").value,
+            idade: document.getElementById("idade").value,
+            responsavel: document.getElementById("responsavel").value,
+            telefone: document.getElementById("telefone").value,
+            email: document.getElementById("email").value,
+            obs: document.getElementById("obs").value
+        };
+
+        const response = await fetch("http://localhost:3000/preinscricao", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(dados)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+    alert("Inscrição concluída com sucesso!");
+    msg.innerHTML = `<div class="sucesso">Pré-inscrição enviada com sucesso!</div>`;
+    form.reset();
+}
+
+        else {
+            msg.innerHTML = `<div class="erro">Erro: ${result.error}</div>`;
+        }
+    });
+</script>
+
+
+
+</body>
+</html>

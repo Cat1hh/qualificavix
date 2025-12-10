@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="admin.css">
+<title>Inscritos no Curso</title>
+</head>
+<body>
+
+<header><h1 id="tituloCurso">Inscritos no Curso</h1></header>
+
+<div class="container">
+    <a class="btn" href="cursos.html">⬅ Voltar</a>
+
+    <table>
+        <thead>
+            <tr><th>Nome</th><th>Email</th><th>Telefone</th><th>Data</th></tr>
+        </thead>
+        <tbody id="listaInscritos"></tbody>
+    </table>
+
+    <p id="msgVazio" style="display:none; text-align:center; font-style:italic; color:#777;">
+        Nenhuma pré-inscrição encontrada.
+    </p>
+</div>
+
+<script>
+// =====================
+// PEGAR ID DO CURSO
+// =====================
+const params = new URLSearchParams(window.location.search);
+const idCurso = params.get("curso");
+
+// Se não tiver curso, volta automaticamente
+if (!idCurso) window.location.href = "cursos.html";
+
+// =====================
+// MOSTRAR NOME DO CURSO
+// =====================
+fetch("/cursos")
+.then(r => r.json())
+.then(lista => {
+    const curso = lista.find(c => c.id == idCurso);
+    if (curso) {
+        document.getElementById("tituloCurso").innerText = "Inscritos: " + curso.nome;
+    }
+});
+
+// =====================
+// LISTAR INSCRITOS
+// =====================
+function carregarInscritos(){
+    fetch("/inscritos/" + idCurso)
+    .then(r => r.json())
+    .then(lista => {
+
+        if (lista.length === 0) {
+            document.getElementById("msgVazio").style.display = "block";
+            document.getElementById("listaInscritos").innerHTML = "";
+            return;
+        }
+
+        let html = "";
+        lista.forEach(i => {
+            const dataBR = new Date(i.data).toLocaleString("pt-BR");
+            html += `
+            <tr>
+                <td>${i.nome}</td>
+                <td>${i.email}</td>
+                <td>${i.telefone}</td>
+                <td>${dataBR}</td>
+            </tr>`;
+        });
+        document.getElementById("listaInscritos").innerHTML = html;
+    });
+}
+
+carregarInscritos();
+</script>
+
+</body>
+</html>

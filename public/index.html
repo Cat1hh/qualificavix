@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Cursos</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header class="banner">
+<div class="stats-container">
+
+    <div class="stat-box">
+        <span class="numero">0</span>
+        <p>vagas hoje</p>
+    </div>
+
+    <img src="imagem/VIxcursos.png" class="logo-ativa" alt="Logo">
+
+    <div class="stat-box">
+        <span class="numero">2.518</span>
+        <p>vagas em 2025</p>
+    </div>
+
+</div>
+</header>
+
+<section class="filtros-card">
+
+    <div class="filtro-item">
+        <label>Idade:</label>
+        <select id="filtro-idade"></select>
+    </div>
+
+    <div class="filtro-item">
+        <label>Categoria:</label>
+        <select id="filtro-categoria"></select>
+    </div>
+
+    <div class="filtro-item">
+        <label>Modalidade:</label>
+        <select id="filtro-modalidade"></select>
+    </div>
+
+    <div class="filtro-item">
+        <label>Local:</label>
+        <select id="filtro-local"></select>
+    </div>
+
+</section>
+
+<div class="banner-botoes">
+    <a href="informacoes.html" class="btn-tema btn-claro">Sobre o Projeto</a>
+    <a href="https://www.vitoria.es.gov.br" target="_blank" class="btn-tema btn-escuro">
+        Prefeitura de Vitória
+    </a>
+</div>
+
+<table class="tabela-cursos">
+    <thead>
+<thead>
+    <tr>
+        <th>Faixa Etária</th>
+        <th>Nome curso</th>
+        <th>Duração</th>
+        <th>Horário</th>
+        <th>Local</th>
+        <th>Detalhes</th>
+        <th>Situação</th>
+        <th>Vagas</th>
+        <th>Aberto</th>
+    </tr>
+</thead>
+
+    </thead>
+    <tbody id="listaCursos"></tbody>
+</table>
+
+<footer class="rodape">
+    <div class="rodape-conteudo">
+
+        <div class="rodape-coluna">
+            <img src="imagem/VIxcursos.png" class="logo-rodape" alt="Logo Vix Cursos">
+            <p>O portal que conecta VOCÊ às melhores oportunidades de cursos gratuitos.</p>
+        </div>
+
+        <div class="rodape-coluna">
+            <h4>Siga-nos</h4>
+            <div class="social">
+                <a href="#">📘</a>
+                <a href="#">📸</a>
+                <a href="#">▶️</a>
+                <a href="admin/menu.html">💼</a>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="rodape-copy">
+        © 2025 Vix Cursos. Todos os direitos reservados.
+    </div>
+</footer>
+
+<script>
+async function carregarCursos() {
+    try {
+        const res = await fetch("http://localhost:3000/cursos");
+        if (!res.ok) {
+            console.error("Erro no servidor:", res.status);
+            return;
+        }
+
+        const cursos = await res.json();
+        console.log("Cursos recebidos:", cursos); // DEBUG
+
+        const tbody = document.getElementById("listaCursos");
+        tbody.innerHTML = "";
+
+        if (!Array.isArray(cursos) || cursos.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="7" style="text-align:center; padding:10px;">
+                        Nenhum curso disponível no momento.
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+cursos.forEach(curso => {
+    const faixaEtaria = `${curso.idade_min || '-'} a ${curso.idade_max || '-'}`;
+    const duracao = curso.duracao || "Indefinida";
+    const horario = curso.horario || "Consultar";
+    const vagas = curso.vagas ?? "0";
+
+tbody.innerHTML += `
+    <tr>
+        <td>${faixaEtaria}</td>
+        <td>${curso.nome}</td>
+        <td>${duracao}</td>
+        <td>${horario}</td>
+
+        <!-- LOCAL DO CURSO -->
+        <td>${curso.local || 'Não informado'}</td>
+
+        <td>
+            <button class="btn-saiba">Saiba +</button>
+        </td>
+
+        <td>
+            ${
+                curso.vagas > 0
+                ? `<button class="btn-inscricao" onclick="window.location.href='pre_inscricao.html?id=${curso.id}'">Pré-inscrição</button>`
+                : `<button class="btn-inscricao btn-desativado" disabled>ESGOTADO</button>`
+            }
+        </td>
+
+        <td class="col-vagas ${curso.vagas <= 0 ? 'texto-vermelho' : ''}">
+            ${curso.vagas}
+        </td>
+
+        <td class="${curso.status === 'esgotado' ? 'col-esgotado' : 'col-aberto'}">
+            ${curso.status === 'esgotado' ? '0' : '1'}
+        </td>
+    </tr>
+`;
+
+
+});
+
+
+    } catch (err) {
+        console.error("Erro ao carregar cursos:", err);
+    }
+}
+
+carregarCursos();
+</script>
+
+
+<!-- ====================================================== -->
+<!-- FILTROS                                                -->
+<!-- ====================================================== -->
+<script>
+async function carregarFiltros() {
+
+    // IDADE
+    let r1 = await fetch("http://localhost:3000/public/idade");
+    let idades = await r1.json();
+    let selIdade = document.querySelector("#filtro-idade");
+    selIdade.innerHTML = '<option value="">Todas</option>';
+    idades.forEach(i => {
+        selIdade.innerHTML += `<option>${i.idade}</option>`;
+    });
+
+    // CATEGORIA
+    let r2 = await fetch("http://localhost:3000/public/categoria");
+    let categorias = await r2.json();
+    let selCat = document.querySelector("#filtro-categoria");
+    selCat.innerHTML = '<option value="">Todas</option>';
+    categorias.forEach(c => {
+        selCat.innerHTML += `<option>${c.categoria}</option>`;
+    });
+
+    // MODALIDADE
+    let r3 = await fetch("http://localhost:3000/public/modalidade");
+    let modalidades = await r3.json();
+    let selMod = document.querySelector("#filtro-modalidade");
+    selMod.innerHTML = '<option value="">Todas</option>';
+    modalidades.forEach(m => {
+        selMod.innerHTML += `<option>${m.modalidade}</option>`;
+    });
+
+    // LOCAL
+    let r4 = await fetch("http://localhost:3000/public/local");
+    let locais = await r4.json();
+    let selLocal = document.querySelector("#filtro-local");
+    selLocal.innerHTML = '<option value="">Todos</option>';
+    locais.forEach(l => {
+        selLocal.innerHTML += `<option>${l.local}</option>`;
+    });
+}
+
+carregarFiltros();
+</script>
+
+<!-- ====================================================== -->
+<!-- INSCRIÇÃO                                              -->
+<!-- ====================================================== -->
+<script>
+async function inscrever(curso_id) {
+    const nome = prompt("Seu nome:");
+    const email = prompt("Seu email:");
+    const telefone = prompt("Seu telefone:");
+
+    const res = await fetch("http://localhost:3000/inscricao", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nome, email, telefone, curso_id })
+    });
+
+    const resposta = await res.json();
+    alert(resposta.status || resposta.error);
+}
+</script>
+<!-- ================= CHAT WIDGET ================= -->
+<style>
+/* simples pra começar */
+#chatBtn {
+  position: fixed; right: 20px; bottom: 20px;
+  background:#0aa; color:#fff; border:none; padding:12px 16px; border-radius:50px; cursor:pointer; box-shadow:0 6px 14px rgba(0,0,0,0.2);
+}
+#chatWindow {
+  position: fixed; right:20px; bottom:80px; width:320px; max-height:60vh; background:#fff; border-radius:8px; box-shadow:0 10px 30px rgba(0,0,0,0.2); display:none; overflow:hidden; font-family:Arial;
+}
+#chatHeader { background:#0aa; color:#fff; padding:10px; }
+#chatBody { padding:10px; height:40vh; overflow:auto; }
+.chat-msg { margin:8px 0; }
+.chat-msg.user { text-align:right; }
+.chat-msg .bubble { display:inline-block; padding:8px 12px; border-radius:12px; max-width:80%; }
+.chat-msg.user .bubble { background:#0aa; color:#fff; border-bottom-right-radius:4px; }
+.chat-msg.bot .bubble { background:#f1f1f1; color:#111; border-bottom-left-radius:4px; }
+#chatInputWrap { display:flex; border-top:1px solid #eee; }
+#chatInput { flex:1; border:0; padding:10px; }
+#chatSend { border:0; background:#0aa; color:#fff; padding:10px 12px; cursor:pointer; }
+</style>
+
+<button id="chatBtn">Chat</button>
+
+<div id="chatWindow">
+  <div id="chatHeader">Assistente VixCursos</div>
+  <div id="chatBody">
+    <div class="chat-msg bot"><div class="bubble">Olá! Pergunte sobre cursos, vagas, locais — ex: "curso 5" ou "vagas".</div></div>
+  </div>
+  <div id="chatInputWrap">
+    <input id="chatInput" placeholder="Escreva sua pergunta..." />
+    <button id="chatSend">Enviar</button>
+  </div>
+</div>
+
+<script>
+const chatBtn = document.getElementById('chatBtn');
+const chatWindow = document.getElementById('chatWindow');
+const chatBody = document.getElementById('chatBody');
+const chatInput = document.getElementById('chatInput');
+const chatSend = document.getElementById('chatSend');
+
+chatBtn.addEventListener('click', () => {
+  chatWindow.style.display = chatWindow.style.display === 'block' ? 'none' : 'block';
+  if (chatWindow.style.display === 'block') chatInput.focus();
+});
+
+function addMessage(who, text) {
+  const div = document.createElement('div');
+  div.className = 'chat-msg ' + (who === 'user' ? 'user' : 'bot');
+  const b = document.createElement('div');
+  b.className = 'bubble';
+  b.innerText = text;
+  div.appendChild(b);
+  chatBody.appendChild(div);
+  chatBody.scrollTop = chatBody.scrollHeight;
+}
+
+async function enviarMensagem() {
+  const text = chatInput.value.trim();
+  if (!text) return;
+  addMessage('user', text);
+  chatInput.value = '';
+  // loading...
+  addMessage('bot', '⏳ Respondendo...');
+  try {
+    const res = await fetch('/chat', {
+      method: 'POST',
+      headers:{ 'Content-Type':'application/json' },
+      body: JSON.stringify({ message: text })
+    });
+    const data = await res.json();
+    // remove último bot "loading"
+    const last = chatBody.querySelectorAll('.chat-msg.bot');
+    if (last.length) last[last.length-1].remove();
+    addMessage('bot', data.reply || 'Desculpe, sem resposta.');
+  } catch (e) {
+    const last = chatBody.querySelectorAll('.chat-msg.bot');
+    if (last.length) last[last.length-1].remove();
+    addMessage('bot', 'Erro ao enviar. Tente novamente.');
+  }
+}
+
+chatSend.addEventListener('click', enviarMensagem);
+chatInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') enviarMensagem(); });
+</script>
+<!-- ================= END CHAT WIDGET ================= -->
+
+</body>
+
+
+
+</html>

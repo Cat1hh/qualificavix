@@ -1,0 +1,537 @@
+/* ---------- Reset ---------- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* ---------- Layout geral ---------- */
+body {
+    background: #f7f7f7;
+    color: #333;
+    padding-bottom: 50px;
+}
+
+/* ---------- Cabeçalho ---------- */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 25px;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+header .logo {
+    font-size: 22px;
+    font-weight: bold;
+    color: #A33E44;
+}
+
+nav a {
+    margin-left: 20px;
+    text-decoration: none;
+    color: #444;
+    font-size: 15px;
+}
+
+nav a:hover {
+    color: #A33E44;
+}
+
+/* ---------- Filtros ---------- */
+.filtros {
+    margin: 25px auto;
+    padding: 15px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.filtros select {
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background: white;
+    font-size: 14px;
+}
+
+/* ---------- Lista de cursos ---------- */
+.cursos {
+    max-width: 900px;
+    margin: auto;
+    display: grid;
+    gap: 20px;
+    padding: 10px;
+}
+
+.curso {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.curso h3 {
+    font-size: 18px;
+    margin-bottom: 5px;
+    color: #A33E44;
+}
+
+.curso p {
+    font-size: 14px;
+    color: #777;
+    margin-bottom: 15px;
+}
+
+.curso button {
+    padding: 8px 14px;
+    background: #A33E44;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.curso button:hover {
+    background: #8a3338;
+}
+
+/* ---------- Rodapé ---------- */
+footer {
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px;
+    color: #777;
+    font-size: 14px;
+}
+
+/* ---------- Banner ---------- */
+.banner {
+    width: 100%;
+    height: 260px;
+    background: url('https://via.placeholder.com/1600x400') center/cover no-repeat;
+    display: flex;
+    flex-direction: column; /* para colocar texto e logo em coluna */
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    text-align: center;
+    padding: 20px 0;
+}
+
+/* Camada escura sobre o banner */
+.banner::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+}
+
+/* Conteúdo do banner */
+.banner-content {
+    position: relative;
+    color: white;
+    z-index: 2;
+}
+
+.banner-content h1 {
+    font-size: 30px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.banner-content p {
+    font-size: 16px;
+    opacity: 0.9;
+}
+
+/* ---------- Logo interativa ---------- */
+.logo-ativa {
+    width: 250px;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+    margin-top: 15px;
+    position: relative;
+    z-index: 2; /* garante que aparece acima da camada escura */
+}
+
+.logo-ativa:hover {
+    transform: translateY(-12px) scale(1.07);
+}
+/* Container das caixas + logo */
+.stats-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    position: relative;
+    z-index: 2;
+    margin-top: 20px;
+}
+
+/* Caixas de informação */
+.stat-box {
+    width: 150px;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    backdrop-filter: blur(4px);
+    text-align: center;
+    padding: 10px 0;
+    border-radius: 6px;
+}
+
+/* Número grande */
+.stat-box .numero {
+    font-size: 26px;
+    font-weight: bold;
+    color: white;
+    display: block;
+}
+
+/* Texto pequeno */
+.stat-box p {
+    font-size: 14px;
+    color: #fff;
+    opacity: 0.9;
+    margin-top: 3px;
+}
+/* ---------- FILTROS ESTILO CARD ---------- */
+.filtros-card {
+    max-width: 1100px;
+    margin: -30px auto 20px auto;
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 20px;
+    position: relative;
+    z-index: 5;
+}
+
+.filtro-item {
+    display: flex;
+    flex-direction: column;
+    width: 23%; /* 4 por linha */
+}
+
+.filtro-item label {
+    font-size: 14px;
+    margin-bottom: 6px;
+    color: #333;
+    font-weight: bold;
+}
+
+.filtro-item select {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    background: white;
+}
+
+.checkbox-area {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-top: -10px;
+}
+
+.checkbox-area label {
+    margin-left: 5px;
+    color: #444;
+    font-size: 14px;
+}
+.btn-buscar {
+    background: #D62240; /* vermelho do modelo */
+    border: 2px solid #FF8B00; /* borda laranja */
+    color: white;
+    padding: 15px 35px;
+    font-size: 18px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: 0.2s ease-in-out;
+}
+
+.btn-buscar:hover {
+    background: #b51d36;
+    transform: translateY(-2px);
+}
+
+.btn-buscar .icon {
+    font-size: 20px;
+}
+.banner {
+    background-image: url('imagem/vix.jpg'); /* coloque sua imagem aqui */
+    background-size: cover; 
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 40px 0;            /* altura interna */
+}
+/* ==== RODAPÉ ==== */
+.rodape {
+    background: #0A0D27;
+    padding: 35px 10px 10px;
+    color: #fff;
+    font-family: Arial, sans-serif;
+}
+
+.rodape-conteudo {
+    max-width: 1200px;
+    margin: auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 25px;
+}
+
+.logo-rodape {
+    width: 140px;
+    margin-bottom: 10px;
+    filter: drop-shadow(0px 0px 5px rgba(255, 140, 80, 0.6));
+}
+
+.rodape-coluna {
+    flex: 1 1 220px;
+}
+
+.rodape-coluna h4 {
+    color: #FF8A3D;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.rodape-coluna p {
+    opacity: 0.8;
+}
+
+.rodape-coluna ul {
+    list-style: none;
+    padding: 0;
+}
+
+.rodape-coluna ul li a {
+    text-decoration: none;
+    color: #fff;
+    opacity: 0.75;
+    transition: 0.3s;
+    display: inline-block;
+    padding: 2px 0;
+}
+
+.rodape-coluna ul li a:hover {
+    opacity: 1;
+    color: #E03F44;
+}
+
+.social a {
+    font-size: 22px;
+    margin-right: 12px;
+    opacity: 0.8;
+    transition: 0.3s;
+    text-decoration: none;
+    color: #fff;
+}
+
+.social a:hover {
+    opacity: 1;
+    color: #FF8A3D;
+}
+
+.rodape-copy {
+    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    margin-top: 20px;
+    padding-top: 12px;
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+.banner-botoes {
+    margin-top: 25px;
+    text-align: center;
+    position: relative;
+    z-index: 5;
+}
+
+.banner-botoes a {
+    margin: 0 10px;
+}
+
+/* Base pill button */
+.btn-tema {
+    display: inline-block;
+    padding: 14px 40px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    transition: 0.25s ease-in-out;
+    cursor: pointer;
+}
+
+/* ======================
+   BOTÃO CLARO (cinza, igual imagem)
+   ====================== */
+.btn-claro {
+    background: #C2C2C2;
+    color: #000;
+}
+
+.btn-claro:hover {
+    background: #b3b3b3;
+    transform: translateY(-2px);
+}
+
+/* ======================
+   BOTÃO ESCURO TEMÁTICO
+   (usa o vermelho do site)
+   ====================== */
+.btn-escuro {
+    background: #D62240;       /* Vermelho do seu site */
+    color: white;
+    border: 2px solid #FF8B00; /* Laranja do site */
+}
+
+.btn-escuro:hover {
+    background: #b51d36;
+    transform: translateY(-2px);
+}
+
+.grid-cursos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 25px;
+    margin-top: 20px;
+}
+.curso-card {
+    background: #fff;
+    border-radius: 15px;
+    padding: 18px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+.curso-card img {
+    width: 100%;
+    border-radius: 12px;
+}
+.curso-card h3 {
+    margin-top: 10px;
+    font-size: 18px;
+}
+.grid-cursos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 25px;
+    margin-top: 20px;
+}
+
+.curso-card {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 18px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.curso-card h3 {
+    font-size: 20px;
+    margin-bottom: 8px;
+}
+
+.curso-card p {
+    margin: 4px 0;
+}
+.tabela-cursos {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 30px;
+    font-family: Arial, sans-serif;
+}
+
+.tabela-cursos th {
+    background: #c4c4c4;
+    color: #333;
+    padding: 10px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.tabela-cursos td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+}
+
+.btn-saiba {
+    color: #d9534f;
+    border: 2px solid #d9534f;
+    padding: 6px 18px;
+    border-radius: 8px;
+    font-weight: bold;
+    background: transparent;
+    cursor: pointer;
+}
+
+.btn-inscricao {
+    color: #0da8c8;
+    border: 2px solid #0da8c8;
+    padding: 6px 18px;
+    border-radius: 8px;
+    font-weight: bold;
+    background: transparent;
+    cursor: pointer;
+}
+
+.col-vagas {
+    color: #00bcd4;
+    font-size: 26px;
+    font-weight: bold;
+}
+
+.col-aberto {
+    background: #00bcd4;
+    color: white;
+    font-size: 26px;
+    font-weight: bold;
+    border-radius: 4px;
+    padding: 6px;
+}
+.col-esgotado {
+    background: #d9534f; /* vermelho */
+    color: white;
+    font-size: 26px;
+    font-weight: bold;
+    border-radius: 4px;
+    padding: 6px;
+}
+/* ... (Código anterior) ... */
+
+/* Estilo para a imagem da logo dentro do banner */
+.logo-ativa {
+    max-width: 400px; 
+    height: auto;
+    margin-bottom: 10px;
+    
+    /* Adiciona a transição suave para que a mudança não seja abrupta */
+    transition: transform 0.3s ease-in-out; 
+}
+
+/* NOVO: Efeito de "Salto" (Hover Effect) */
+.logo-ativa:hover {
+    /* Aumenta a logo em 5% (scale(1.05)) */
+    /* Move a logo 5 pixels para cima (translateY(-5px)) */
+    transform: scale(1.05) translateY(-5px); 
+    /* Adiciona uma sombra suave para o efeito de flutuação */
+    filter: drop-shadow(0 0 10px rgba(214, 193, 0, 0.644));
+    cursor: pointer; /* Muda o cursor para indicar que é clicável/interativo */
+}
+
+/* ... (Resto do código CSS) ... */

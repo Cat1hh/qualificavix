@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="admin.css">
+<title>Gerenciar Cursos</title>
+</head>
+<body>
+
+<header><h1>Gerenciar Cursos</h1></header>
+
+<div class="container">
+    <h2>➕ Criar Curso</h2>
+    <form onsubmit="criarCurso(event)">
+
+        <label for="nome">📌 Nome do Curso</label>
+        <select id="nome" required></select>
+
+        <label for="descricao">📝 Descrição</label>
+        <textarea id="descricao" placeholder="Digite detalhes e informações importantes"></textarea>
+
+        <label for="vagas">👥 Quantidade de Vagas</label>
+        <input type="number" id="vagas" placeholder="Ex: 20" min="1">
+
+        <label for="categoria">📂 Categoria</label>
+        <select id="categoria" required></select>
+
+        <!-- 🔥 IDADE MÍNIMA -->
+        <label for="idade_min">🎯 Idade Mínima</label>
+        <select id="idade_min" required></select>
+
+        <!-- 🔥 IDADE MÁXIMA -->
+        <label for="idade_max">🎯 Idade Máxima</label>
+        <select id="idade_max" required></select>
+
+        <label for="modalidade">🏫 Modalidade</label>
+        <select id="modalidade"></select>
+
+        <label for="local">📍 Local</label>
+        <select id="local"></select>
+
+        <button type="submit">💾 Salvar</button>
+    </form>
+</div>
+
+<div class="container">
+    <h2>📋 Cursos Cadastrados</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Curso</th><th>Categoria</th><th>Idade</th><th>Local</th><th>Modalidade</th><th>Status</th><th>Ações</th>
+            </tr>
+        </thead>
+        <tbody id="listaCursos"></tbody>
+    </table>
+</div>
+
+<script>
+
+// =========================
+// 🔸 Carregar filtros
+// =========================
+async function carregarFiltros(id, tipo){
+    const req = await fetch("/public/" + tipo);
+    const data = await req.json();
+
+    const nomeCampo = Object.keys(data[0]).find(k => k !== "id");
+
+    document.getElementById(id).innerHTML =
+        "<option value=''> -- Selecione -- </option>" +
+        data.map(x => `<option value="${x.id}">${x[nomeCampo]}</option>`).join("");
+}
+
+carregarFiltros("categoria","categoria");
+carregarFiltros("idade_min","idade");
+carregarFiltros("idade_max","idade");
+carregarFiltros("modalidade","modalidade");
+carregarFiltros("local","local");
+
+
+// =========================
+// 📌 Carregar NOMES dos CURSOS (tabela filtro_nome)
+// =========================
+async function carregarNomesCursos(){
+    const req = await fetch("/public/nome");
+    const nomes = await req.json();
+
+    document.getElementById("nome").innerHTML =
+        "<option value=''> -- Selecione um Curso -- </option>" +
+        nomes.map(n => `<option value="${n.id}">${n.nome}</option>`).join("");
+}
+
+carregarNomesCursos();
+
+
+// =============================
+// 📋 Listar Cursos
+// =============================
+function carregarCursos(){
+  fetch("/cursos")
+    .then(r => r.json())
+    .then(cursos => {
+      let html = "";
+      cursos.forEach(c => {
+        html += `
+        <tr>
+            <td>${c.nome}</td>
+            <td>${c.categoria || "-"}</td>
+            <td>${c.idade_min} a ${c.idade_max} anos</td>
+            <td>${c.local || "-"}</td>
+            <td>${c.modalidade || "-"}</td>
+            <td>${c.status}</td>
+            <td>
+                ${c.status === "ativo" 
+                ? `<button onclick="esgotar(${c.id})" class="btn-esgotar">⛔ Esgotar</button>` 
+                : "<span style='color:red'>⛔ Esgotado</span>"}
+                <button onclick="verInscritos(${c.id})" class="btn-inscritos">👥 Inscritos</button>
+            </td>
+        </tr>`;
+      });
+      document.getElementById("listaCursos").innerHTML = html;
+    });
+}
+
+
+// =============================
+// 🟢 Criar Curso (CORRIGIDO)
+// =============================
+function criarCurso(e){
+    e.preventDefault();
+
+    const categoria = document.getElementById("categoria").value;
+    const modalidade = document.getElementById("modalidade").value;
+
+    // 🔥 Pelo menos um deve ser preenchido
+    if (!categoria && !modalidade) {
+        alert("Você deve selecionar Categoria OU Modalidade.");
+        return;
+    }
+
+    fetch("/cursos", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        nome: document.getElementById("nome").value,
+        descricao: document.getElementById("descricao").value,
+        vagas: document.getElementById("vagas").value,
+        categoria: categoria,
+        idade_min: document.getElementById("idade_min").value,
+        idade_max: document.getElementById("idade_max").value,
+        modalidade: modalidade,
+        local: document.getElementById("local").value
+      })
+    })
+    .then(r => r.json())
+    .then(res => {
+        if (res.error) {
+            alert("Erro: " + res.error);
+            return;
+        }
+        carregarCursos();
+        alert("Curso cadastrado com sucesso!");
+    });
+}
+
+
+
+// =============================
+// ⛔ Esgotar Curso
+// =============================
+function esgotar(id){
+  fetch("/cursos/esgotar/" + id, { method: "PUT" })
+    .then(()=> carregarCursos());
+}
+
+// =============================
+// 👥 Ver Inscritos
+// =============================
+function verInscritos(id){
+  window.location.href = "inscritos.html?curso=" + id;
+}
+
+carregarCursos();
+// =============================
+// 🔒 Permitir selecionar APENAS Categoria OU Modalidade
+// =============================
+document.getElementById("categoria").addEventListener("change", function () {
+    const categoriaSelecionada = this.value;
+    const modalidade = document.getElementById("modalidade");
+
+    if (categoriaSelecionada) {
+        modalidade.value = "";
+        modalidade.disabled = true;
+    } else {
+        modalidade.disabled = false;
+    }
+});
+
+document.getElementById("modalidade").addEventListener("change", function () {
+    const modalidadeSelecionada = this.value;
+    const categoria = document.getElementById("categoria");
+
+    if (modalidadeSelecionada) {
+        categoria.value = "";
+        categoria.disabled = true;
+    } else {
+        categoria.disabled = false;
+    }
+});
+
+</script>
+
+</body>
+</html>

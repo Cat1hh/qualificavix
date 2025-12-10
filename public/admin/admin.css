@@ -1,0 +1,151 @@
+/* =====================
+   ESTILO GERAL DO PAINEL
+   ===================== */
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #fff7f0;
+    margin: 0;
+    padding: 0;
+    color: #2b2b2b;
+}
+
+header {
+    background: linear-gradient(90deg, #ff6b35, #ff9966);
+    color: white;
+    padding: 20px;
+    text-align: center;
+    font-size: 22px;
+}
+
+h1, h2 {
+    margin: 0 0 15px;
+    font-weight: bold;
+    color: #ff6b35;
+}
+
+/* =====================
+   CONTÊINER PADRÃO
+   ===================== */
+.container {
+    background: white;
+    margin: 20px auto;
+    padding: 20px 25px;
+    width: 90%;
+    max-width: 950px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(255, 107, 53, 0.25);
+}
+
+/* =====================
+   FORMULÁRIOS
+   ===================== */
+input, textarea, select {
+    width: 100%;
+    margin-bottom: 12px;
+    padding: 10px;
+    border: 2px solid #ffd66b;
+    border-radius: 6px;
+    font-size: 15px;
+    background: #fffdf8;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 90px;
+}
+
+input:focus, textarea:focus, select:focus {
+    border-color: #ff6b35;
+    outline: none;
+    background: #fff3e0;
+}
+
+/* =====================
+   BOTÕES
+   ===================== */
+button, .btn {
+    display: inline-block;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    background: #ff6b35;
+    color: white;
+    cursor: pointer;
+    font-size: 15px;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+button:hover, .btn:hover {
+    background: #ff9966;
+}
+
+.btn-voltar {
+    background: #ffd66b;
+    color: #2b2b2b;
+}
+.btn-voltar:hover {
+    background: #ff6b35;
+    color: white;
+}
+
+/* =====================
+   TABELAS
+   ===================== */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    font-size: 15px;
+}
+
+thead {
+    background: #ffd66b;
+}
+
+th {
+    padding: 12px;
+    text-align: left;
+    font-weight: bold;
+    color: #2b2b2b;
+}
+
+td {
+    padding: 10px;
+    border-bottom: 1px solid #ffead2;
+}
+
+tr:nth-child(even) {
+    background: #fff3e0;
+}
+
+tr:hover {
+    background: #ffe0c4;
+}
+
+/* =====================
+   ALERTA DE ESGOTADO
+   ===================== */
+td span {
+    font-weight: bold;
+    background: #ff3b3b;
+    color: white;
+    padding: 3px 7px;
+    border-radius: 5px;
+}
+
+/* =====================
+   RESPONSIVIDADE
+   ===================== */
+@media (max-width: 650px) {
+    table, thead, tbody, tr, td, th { display: block; }
+    tr { margin-bottom: 15px; }
+    td { padding-left: 40%; position: relative; }
+    td:before {
+        position: absolute;
+        left: 10px;
+        width: 35%;
+        font-weight: bold;
+        color: #ff6b35;
+    }
+}

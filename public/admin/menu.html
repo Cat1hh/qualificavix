@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="admin.css">
+<title>Inscritos no Curso</title>
+</head>
+<body>
+
+<header><h1>Inscritos no Curso</h1></header>
+
+<div class="container">
+    <a class="btn" href="cursos.html">⬅ Voltar</a>
+
+    <table>
+        <thead>
+            <tr><th>Nome</th><th>Email</th><th>Telefone</th><th>Data</th></tr>
+        </thead>
+        <tbody id="listaInscritos"></tbody>
+    </table>
+</div>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const idCurso = params.get("curso");
+
+function carregarInscritos(){
+    fetch("/inscritos/" + idCurso)
+    .then(r => r.json())
+    .then(lista => {
+        let html = "";
+        lista.forEach(i => {
+            html += `
+            <tr>
+                <td>${i.nome}</td>
+                <td>${i.email}</td>
+                <td>${i.telefone}</td>
+                <td>${new Date(i.data).toLocaleString()}</td>
+            </tr>`;
+        });
+        document.getElementById("listaInscritos").innerHTML = html;
+    });
+}
+
+carregarInscritos();
+</script>
+
+</body>
+</html>
