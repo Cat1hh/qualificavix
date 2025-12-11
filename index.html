@@ -6,25 +6,37 @@
     <title>Portal de Cursos</title>
     <link rel="stylesheet" href="style.css">
 </head>
+<!-- BOTÃO DO CHAT -->
+<button id="chatBtn">Chat</button>
+
+<!-- JANELA DO CHAT -->
+<div id="chatWindow">
+    <div id="chatHeader">Atendimento</div>
+
+    <div id="chatBody"></div>
+
+    <div id="chatInputWrap">
+        <input id="chatInput" type="text" placeholder="Digite sua mensagem...">
+        <button id="chatSend">Enviar</button>
+    </div>
+</div>
 
 <body>
 
 <header class="banner">
-<div class="stats-container">
+    <div class="stats-container">
+        <div class="stat-box">
+            <span class="numero">0</span>
+            <p>vagas hoje</p>
+        </div>
 
-    <div class="stat-box">
-        <span class="numero">0</span>
-        <p>vagas hoje</p>
+        <img src="imagem/VIxcursos.png" class="logo-ativa" alt="Logo">
+
+        <div class="stat-box">
+            <span class="numero">2.518</span>
+            <p>vagas em 2025</p>
+        </div>
     </div>
-
-    <img src="imagem/VIxcursos.png" class="logo-ativa" alt="Logo">
-
-    <div class="stat-box">
-        <span class="numero">2.518</span>
-        <p>vagas em 2025</p>
-    </div>
-
-</div>
 </header>
 
 <section class="filtros-card">
@@ -58,23 +70,28 @@
     </a>
 </div>
 
+<div id="person-wrapper">
+    <img id="person-avatar" src="https://cdn-icons-png.flaticon.com/512/145/145867.png">
+    <p id="person-speaking">Falando...</p>
+
+    <button id="mute-btn">🔊 Mutar</button>
+</div>
+
 <table class="tabela-cursos">
     <thead>
-<thead>
-    <tr>
-        <th>Faixa Etária</th>
-        <th>Nome curso</th>
-        <th>Duração</th>
-        <th>Horário</th>
-        <th>Local</th>
-        <th>Detalhes</th>
-        <th>Situação</th>
-        <th>Vagas</th>
-        <th>Aberto</th>
-    </tr>
-</thead>
-
+        <tr>
+            <th>Faixa Etária</th>
+            <th>Nome curso</th>
+            <th>Duração</th>
+            <th>Horário</th>
+            <th>Local</th>
+            <th>Detalhes</th>
+            <th>Situação</th>
+            <th>Vagas</th>
+            <th>Aberto</th>
+        </tr>
     </thead>
+
     <tbody id="listaCursos"></tbody>
 </table>
 
@@ -103,25 +120,27 @@
     </div>
 </footer>
 
+<!-- ====================================================== -->
+<!-- LISTAGEM DE CURSOS                                    -->
+<!-- ====================================================== -->
 <script>
 async function carregarCursos() {
     try {
         const res = await fetch("http://localhost:3000/cursos");
+
         if (!res.ok) {
             console.error("Erro no servidor:", res.status);
             return;
         }
 
         const cursos = await res.json();
-        console.log("Cursos recebidos:", cursos); // DEBUG
-
         const tbody = document.getElementById("listaCursos");
         tbody.innerHTML = "";
 
         if (!Array.isArray(cursos) || cursos.length === 0) {
             tbody.innerHTML = `
                 <tr>
-                    <td colspan="7" style="text-align:center; padding:10px;">
+                    <td colspan="9" style="text-align:center; padding:10px;">
                         Nenhum curso disponível no momento.
                     </td>
                 </tr>
@@ -129,100 +148,79 @@ async function carregarCursos() {
             return;
         }
 
-cursos.forEach(curso => {
-    const faixaEtaria = `${curso.idade_min || '-'} a ${curso.idade_max || '-'}`;
-    const duracao = curso.duracao || "Indefinida";
-    const horario = curso.horario || "Consultar";
-    const vagas = curso.vagas ?? "0";
+        cursos.forEach(curso => {
+            const faixa = `${curso.idade_min || '-'} a ${curso.idade_max || '-'}`;
+            const duracao = curso.duracao || "Indefinida";
+            const horario = curso.horario || "Consultar";
+            const vagas = curso.vagas ?? "0";
 
-tbody.innerHTML += `
-    <tr>
-        <td>${faixaEtaria}</td>
-        <td>${curso.nome}</td>
-        <td>${duracao}</td>
-        <td>${horario}</td>
+            tbody.innerHTML += `
+                <tr>
+                    <td data-label="Faixa Etária">${faixa}</td>
+                    <td data-label="Nome">${curso.nome}</td>
+                    <td data-label="Duração">${duracao}</td>
+                    <td data-label="Horário">${horario}</td>
+                    <td data-label="Local">${curso.local || 'Não informado'}</td>
 
-        <!-- LOCAL DO CURSO -->
-        <td>${curso.local || 'Não informado'}</td>
+                    <td data-label="Detalhes">
+                        <button class="btn-saiba">Saiba +</button>
+                    </td>
 
-        <td>
-            <button class="btn-saiba">Saiba +</button>
-        </td>
+                    <td data-label="Situação">
+                        ${
+                            curso.vagas > 0
+                            ? `<button class="btn-inscricao" onclick="window.location.href='pre_inscricao.html?id=${curso.id}'">Pré-inscrição</button>`
+                            : `<button class="btn-inscricao btn-desativado" disabled>ESGOTADO</button>`
+                        }
+                    </td>
 
-        <td>
-            ${
-                curso.vagas > 0
-                ? `<button class="btn-inscricao" onclick="window.location.href='pre_inscricao.html?id=${curso.id}'">Pré-inscrição</button>`
-                : `<button class="btn-inscricao btn-desativado" disabled>ESGOTADO</button>`
-            }
-        </td>
+                    <td data-label="Vagas" class="col-vagas ${curso.vagas <= 0 ? 'texto-vermelho' : ''}">
+                        ${curso.vagas}
+                    </td>
 
-        <td class="col-vagas ${curso.vagas <= 0 ? 'texto-vermelho' : ''}">
-            ${curso.vagas}
-        </td>
-
-        <td class="${curso.status === 'esgotado' ? 'col-esgotado' : 'col-aberto'}">
-            ${curso.status === 'esgotado' ? '0' : '1'}
-        </td>
-    </tr>
-`;
-
-
-});
-
+                    <td data-label="Aberto" class="${curso.status === 'esgotado' ? 'col-esgotado' : 'col-aberto'}">
+                        ${curso.status === 'esgotado' ? '0' : '1'}
+                    </td>
+                </tr>
+            `;
+        });
 
     } catch (err) {
         console.error("Erro ao carregar cursos:", err);
     }
 }
-
 carregarCursos();
 </script>
-
 
 <!-- ====================================================== -->
 <!-- FILTROS                                                -->
 <!-- ====================================================== -->
 <script>
 async function carregarFiltros() {
-
-    // IDADE
     let r1 = await fetch("http://localhost:3000/public/idade");
     let idades = await r1.json();
     let selIdade = document.querySelector("#filtro-idade");
     selIdade.innerHTML = '<option value="">Todas</option>';
-    idades.forEach(i => {
-        selIdade.innerHTML += `<option>${i.idade}</option>`;
-    });
+    idades.forEach(i => selIdade.innerHTML += `<option>${i.idade}</option>`);
 
-    // CATEGORIA
     let r2 = await fetch("http://localhost:3000/public/categoria");
     let categorias = await r2.json();
-    let selCat = document.querySelector("#filtro-categoria");
-    selCat.innerHTML = '<option value="">Todas</option>';
-    categorias.forEach(c => {
-        selCat.innerHTML += `<option>${c.categoria}</option>`;
-    });
+    let selCategoria = document.querySelector("#filtro-categoria");
+    selCategoria.innerHTML = '<option value="">Todas</option>';
+    categorias.forEach(c => selCategoria.innerHTML += `<option>${c.categoria}</option>`);
 
-    // MODALIDADE
     let r3 = await fetch("http://localhost:3000/public/modalidade");
     let modalidades = await r3.json();
-    let selMod = document.querySelector("#filtro-modalidade");
-    selMod.innerHTML = '<option value="">Todas</option>';
-    modalidades.forEach(m => {
-        selMod.innerHTML += `<option>${m.modalidade}</option>`;
-    });
+    let selModal = document.querySelector("#filtro-modalidade");
+    selModal.innerHTML = '<option value="">Todas</option>';
+    modalidades.forEach(m => selModal.innerHTML += `<option>${m.modalidade}</option>`);
 
-    // LOCAL
     let r4 = await fetch("http://localhost:3000/public/local");
     let locais = await r4.json();
     let selLocal = document.querySelector("#filtro-local");
     selLocal.innerHTML = '<option value="">Todos</option>';
-    locais.forEach(l => {
-        selLocal.innerHTML += `<option>${l.local}</option>`;
-    });
+    locais.forEach(l => selLocal.innerHTML += `<option>${l.local}</option>`);
 }
-
 carregarFiltros();
 </script>
 
@@ -245,40 +243,35 @@ async function inscrever(curso_id) {
     alert(resposta.status || resposta.error);
 }
 </script>
-<!-- ================= CHAT WIDGET ================= -->
+
+<!-- ====================================================== -->
+<!-- CHAT WIDGET                                            -->
+<!-- ====================================================== -->
 <style>
-/* simples pra começar */
 #chatBtn {
   position: fixed; right: 20px; bottom: 20px;
-  background:#0aa; color:#fff; border:none; padding:12px 16px; border-radius:50px; cursor:pointer; box-shadow:0 6px 14px rgba(0,0,0,0.2);
+  background:#0aa; color:#fff; border:none; padding:12px 16px;
+  border-radius:50px; cursor:pointer; box-shadow:0 6px 14px rgba(0,0,0,0.2);
 }
 #chatWindow {
-  position: fixed; right:20px; bottom:80px; width:320px; max-height:60vh; background:#fff; border-radius:8px; box-shadow:0 10px 30px rgba(0,0,0,0.2); display:none; overflow:hidden; font-family:Arial;
+  position: fixed; right:20px; bottom:80px;
+  width:320px; max-height:60vh; background:#fff;
+  border-radius:8px; box-shadow:0 10px 30px rgba(0,0,0,0.2);
+  display:none; overflow:hidden; font-family:Arial;
 }
 #chatHeader { background:#0aa; color:#fff; padding:10px; }
 #chatBody { padding:10px; height:40vh; overflow:auto; }
 .chat-msg { margin:8px 0; }
 .chat-msg.user { text-align:right; }
-.chat-msg .bubble { display:inline-block; padding:8px 12px; border-radius:12px; max-width:80%; }
-.chat-msg.user .bubble { background:#0aa; color:#fff; border-bottom-right-radius:4px; }
-.chat-msg.bot .bubble { background:#f1f1f1; color:#111; border-bottom-left-radius:4px; }
+.chat-msg .bubble {
+  display:inline-block; padding:8px 12px; border-radius:12px; max-width:80%;
+}
+.chat-msg.user .bubble { background:#0aa; color:#fff; }
+.chat-msg.bot .bubble { background:#f1f1f1; color:#111; }
 #chatInputWrap { display:flex; border-top:1px solid #eee; }
 #chatInput { flex:1; border:0; padding:10px; }
 #chatSend { border:0; background:#0aa; color:#fff; padding:10px 12px; cursor:pointer; }
 </style>
-
-<button id="chatBtn">Chat</button>
-
-<div id="chatWindow">
-  <div id="chatHeader">Assistente VixCursos</div>
-  <div id="chatBody">
-    <div class="chat-msg bot"><div class="bubble">Olá! Pergunte sobre cursos, vagas, locais — ex: "curso 5" ou "vagas".</div></div>
-  </div>
-  <div id="chatInputWrap">
-    <input id="chatInput" placeholder="Escreva sua pergunta..." />
-    <button id="chatSend">Enviar</button>
-  </div>
-</div>
 
 <script>
 const chatBtn = document.getElementById('chatBtn');
@@ -292,13 +285,87 @@ chatBtn.addEventListener('click', () => {
   if (chatWindow.style.display === 'block') chatInput.focus();
 });
 
+let muted = false;
+
+// =====================================
+// 🔊 SISTEMA DE VOZ (SPEECH API)
+// =====================================
+
+// ======= CONFIGURAÇÃO DE VOZ DO CHATBOT =======
+let vozAtiva = null;
+
+// Carrega vozes do navegador
+window.speechSynthesis.onvoiceschanged = () => {
+    const voices = speechSynthesis.getVoices();
+    vozAtiva = voices.find(v => v.lang === "pt-BR") || voices[0];
+};
+
+// Remove emojis antes de falar
+function limparEmojis(texto) {
+    return texto.replace(
+        /([\u2700-\u27BF]|[\uE000-\uF8FF]|[\uD83C-\uDBFF][\uDC00-\uDFFF]|\p{Extended_Pictographic})/gu,
+        ""
+    );
+}
+
+// Fala o texto
+function falarTexto(texto) {
+    if (muted) return;
+
+    const textoLimpo = limparEmojis(texto);
+
+    if (!textoLimpo.trim()) return; // evita falar "nada"
+
+    const utter = new SpeechSynthesisUtterance(textoLimpo);
+    utter.voice = vozAtiva;
+    utter.rate = 1;
+    utter.pitch = 1;
+
+    speechSynthesis.cancel();
+    speechSynthesis.speak(utter);
+
+    personSpeaking.style.display = "block";
+
+    utter.onend = () => {
+        personSpeaking.style.display = "none";
+    };
+}
+
+
+// =====================================
+
 function addMessage(who, text) {
   const div = document.createElement('div');
   div.className = 'chat-msg ' + (who === 'user' ? 'user' : 'bot');
-  const b = document.createElement('div');
-  b.className = 'bubble';
-  b.innerText = text;
-  div.appendChild(b);
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble';
+
+  // 🔥 BOT FALA EM VOZ ALTA
+  if (who === "bot") {
+      falarTexto(text);
+  }
+
+  // 🔥 Transformar automaticamente links de pré-inscrição em botão
+  text = text.replace(
+    /(https?:\/\/[^\s]+pre_inscricao\.html\?id=\d+|pre_inscricao\.html\?id=\d+)/g,
+    `<a href="$1"
+       style="
+         display:inline-block;
+         background:#0aa;
+         color:#fff;
+         padding:8px 14px;
+         border-radius:8px;
+         text-decoration:none;
+         font-weight:bold;
+         margin-top:6px;
+         display:block;
+       ">
+       🚀 Fazer Pré-inscrição
+     </a>`
+  );
+
+  bubble.innerHTML = text;
+  div.appendChild(bubble);
   chatBody.appendChild(div);
   chatBody.scrollTop = chatBody.scrollHeight;
 }
@@ -306,35 +373,87 @@ function addMessage(who, text) {
 async function enviarMensagem() {
   const text = chatInput.value.trim();
   if (!text) return;
+
   addMessage('user', text);
   chatInput.value = '';
-  // loading...
+
   addMessage('bot', '⏳ Respondendo...');
+
+  if (/inscri|inscrever|matricul|pre[- ]?inscri/i.test(text)) {
+      const last = chatBody.querySelectorAll('.chat-msg.bot');
+      if (last.length) last[last.length - 1].remove();
+
+      const div = document.createElement('div');
+      div.className = 'chat-msg bot';
+
+      div.innerHTML = `
+        <div class="bubble">
+            Claro! Clique no botão abaixo para fazer sua pré-inscrição:
+            <br><br>
+            <a href="pre_inscricao.html"
+               style="
+                   display:inline-block;
+                   background:#0aa;
+                   color:#fff;
+                   padding:8px 14px;
+                   border-radius:8px;
+                   text-decoration:none;
+                   font-weight:bold;
+               ">
+               Fazer Pré-inscrição
+            </a>
+        </div>
+      `;
+
+      chatBody.appendChild(div);
+      chatBody.scrollTop = chatBody.scrollHeight;
+      return;
+  }
+
   try {
     const res = await fetch('/chat', {
-      method: 'POST',
-      headers:{ 'Content-Type':'application/json' },
-      body: JSON.stringify({ message: text })
+        method: 'POST',
+        headers:{ 'Content-Type':'application/json' },
+        body: JSON.stringify({ message: text })
     });
+
     const data = await res.json();
-    // remove último bot "loading"
+
     const last = chatBody.querySelectorAll('.chat-msg.bot');
     if (last.length) last[last.length-1].remove();
+
     addMessage('bot', data.reply || 'Desculpe, sem resposta.');
+
   } catch (e) {
     const last = chatBody.querySelectorAll('.chat-msg.bot');
     if (last.length) last[last.length-1].remove();
+
     addMessage('bot', 'Erro ao enviar. Tente novamente.');
   }
 }
 
 chatSend.addEventListener('click', enviarMensagem);
-chatInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') enviarMensagem(); });
+chatInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') enviarMensagem();
+});
+
+const personSpeaking = document.getElementById("person-speaking");
+const muteBtn = document.getElementById("mute-btn");
+
+muteBtn.addEventListener("click", () => {
+    muted = !muted;
+
+    if (muted) {
+        personSpeaking.style.display = "none";
+        muteBtn.textContent = "🔈 Desmutar";
+        muteBtn.classList.add("muted");
+    } else {
+        personSpeaking.style.display = "block";
+        muteBtn.textContent = "🔊 Mutar";
+        muteBtn.classList.remove("muted");
+    }
+});
 </script>
-<!-- ================= END CHAT WIDGET ================= -->
 
 </body>
-
-
-
 </html>
