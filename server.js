@@ -3,7 +3,6 @@ const mysql = require("mysql2/promise");
 const cors = require("cors");
 const path = require("path");
 const nodemailer = require("nodemailer");
-const ngrok = require("ngrok"); // OK aqui
 
 const app = express();
 app.use(cors());
@@ -210,88 +209,126 @@ async function start() {
         }
     });
 
-    // ============================================================
-    // CHATBOT
-    // ============================================================
-    app.post("/chat", async (req, res) => {
-        try {
-            let text = (req.body.message || "")
-                .toString()
-                .trim()
-                .toLowerCase()
-                .normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+// ============================================================
+// CHATBOT
+// ============================================================
+app.post("/chat", async (req, res) => {
+    try {
+        let text = (req.body.message || "")
+            .toString()
+            .trim()
+            .toLowerCase()
+            .normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
-            if (!text) {
-                return res.json({ reply: "Diga algo como: 'curso 5', 'vagas', 'locais', 'lista de cursos'." });
-            }
+        if (!text) {
+            return res.json({ reply: "Diga algo como: 'curso 5', 'vagas', 'locais', 'lista de cursos'." });
+        }
 
-            const has = words => words.some(w => text.includes(w));
-            const matchId = text.match(/curso\s*(\d+)/) || text.match(/id\s*(\d+)/);
+        const has = words => words.some(w => text.includes(w));
+        const matchId = text.match(/curso\s*(\d+)/) || text.match(/id\s*(\d+)/);
 
-            if (matchId) {
-                const id = matchId[1];
+        // ============================================================
+        // 🔥 RESPOSTA AUTOMÁTICA PARA INSCRIÇÃO
+        // ============================================================
+        if (has(["inscricao", "inscrever", "quero me inscrever", "matricula", "pre inscri", "inscrever"])) {
+            return res.json({
+                reply: `
+🔗 Clique abaixo para fazer sua pré-inscrição:
+http://localhost:3000/pre_inscricao.html
+                `
+            });
+        }
 
-                const [rows] = await db.query(`
-                    SELECT c.id, fn.nome, c.descricao, c.vagas, c.status,
-                           fl.local, fm.modalidade
-                    FROM cursos c
-                    LEFT JOIN filtro_nome fn ON fn.id = c.nome_id
-                    LEFT JOIN filtro_local fl ON fl.id = c.local_id
-                    LEFT JOIN filtro_modalidade fm ON fm.id = c.modalidade_id
-                    WHERE c.id = ?
-                `, [id]);
+        // ============================================================
+        // SE O USUÁRIO PEDIR UM CURSO ESPECÍFICO
+        // ============================================================
+        if (matchId) {
+            const id = matchId[1];
 
-                if (!rows.length) return res.json({ reply: "Curso não encontrado." });
+            const [rows] = await db.query(`
+                SELECT c.id, fn.nome, c.descricao, c.vagas, c.status,
+                       fl.local, fm.modalidade
+                FROM cursos c
+                LEFT JOIN filtro_nome fn ON fn.id = c.nome_id
+                LEFT JOIN filtro_local fl ON fl.id = c.local_id
+                LEFT JOIN filtro_modalidade fm ON fm.id = c.modalidade_id
+                WHERE c.id = ?
+            `, [id]);
 
-                const c = rows[0];
+            if (!rows.length)
+                return res.json({ reply: "Curso não encontrado." });
 
-                return res.json({
-                    reply:
-`📘 *${c.nome}*
-${c.descricao ? "📝 " + c.descricao : ""}
-📍 Local: ${c.local}
-🏫 Modalidade: ${c.modalidade}
-👥 Vagas: ${c.vagas} — ${c.status}`
-                });
-            }
-
-            if (has(["vaga", "vagas", "disponivel", "tem vaga"])) {
-                const [rows] = await db.query(`SELECT SUM(vagas) AS total FROM cursos WHERE status = 'ativo'`);
-                const total = rows[0].total || 0;
-                return res.json({ reply: `Atualmente temos *${total} vagas disponíveis*.` });
-            }
-
-            if (has(["curso", "cursos", "lista", "catalogo", "mostrar cursos"])) {
-                const [rows] = await db.query(`
-                    SELECT c.id, fn.nome, c.vagas, c.status, fl.local
-                    FROM cursos c
-                    LEFT JOIN filtro_nome fn ON fn.id = c.nome_id
-                    LEFT JOIN filtro_local fl ON fl.id = c.local_id
-                `);
-
-                const lista = rows
-                    .map(r => `📘 ${r.id} — ${r.nome}\n📍 Local: ${r.local}\n👥 ${r.vagas} vagas — ${r.status}\n`)
-                    .join("\n");
-
-                return res.json({ reply: lista });
-            }
+            const c = rows[0];
 
             return res.json({
                 reply:
+`📘 *${c.nome}*
+${c.descricao ? "📝 " + c.descricao : ""}
+
+📍 Local: ${c.local}
+🏫 Modalidade: ${c.modalidade}
+👥 Vagas: ${c.vagas} — ${c.status}
+
+👉 *Pré-inscrição:*  
+http://localhost:3000/pre_inscricao.html?id=${c.id}
+`
+            });
+        }
+
+        // ============================================================
+        // TOTAL DE VAGAS
+        // ============================================================
+        if (has(["vaga", "vagas", "disponivel", "tem vaga"])) {
+            const [rows] = await db.query(`SELECT SUM(vagas) AS total FROM cursos WHERE status = 'ativo'`);
+            const total = rows[0].total || 0;
+            return res.json({ reply: `Atualmente temos *${total} vagas disponíveis*.` });
+        }
+
+        // ============================================================
+        // LISTA DE CURSOS
+        // ============================================================
+        if (has(["curso", "cursos", "lista", "catalogo", "mostrar cursos"])) {
+            const [rows] = await db.query(`
+                SELECT c.id, fn.nome, c.vagas, c.status, fl.local
+                FROM cursos c
+                LEFT JOIN filtro_nome fn ON fn.id = c.nome_id
+                LEFT JOIN filtro_local fl ON fl.id = c.local_id
+            `);
+
+            const lista = rows
+                .map(r =>
+`📘 *${r.id} — ${r.nome}*
+📍 Local: ${r.local}
+👥 ${r.vagas} vagas — ${r.status}
+👉 Pré-inscrição: http://localhost:3000/pre_inscricao.html?id=${r.id}
+`)
+                .join("\n");
+
+            return res.json({ reply: lista });
+        }
+
+        // ============================================================
+        // RESPOSTA PADRÃO
+        // ============================================================
+        return res.json({
+            reply:
 `Não entendi 😅  
 Tente perguntar:
 
 • "curso 12"
 • "vagas"
 • "lista de cursos"
-• "praia do canto"`
-            });
+• "praia do canto"
+• "quero me inscrever"`
+        });
 
-        } catch (err) {
-            console.error(err);
-            return res.json({ reply: "Erro ao processar mensagem." });
-        }
-    });
+    } catch (err) {
+        console.error(err);
+        return res.json({ reply: "Erro ao processar mensagem." });
+    }
+});
+
+
 
     // ============================================================
     // SPA FALLBACK
@@ -301,23 +338,11 @@ Tente perguntar:
     });
 
     // ============================================================
-    // START SERVER + NGROK
+    // START SERVER
     // ============================================================
     const PORT = 3000;
-    app.listen(PORT, async () => {
+    app.listen(PORT, () => {
         console.log(`🚀 Servidor rodando em http://localhost:${PORT}`);
-
-        try {
-            const url = await ngrok.connect({
-                addr: PORT,
-                proto: "http",
-                authtoken: "36fMrhnvEmY4k9J4GQMufuRjxcy_5vCurTfwYaey1tdKqQCV5"
-            });
-
-            console.log(`🌍 NGROK ONLINE: ${url}`);
-        } catch (err) {
-            console.log("❌ Erro ao iniciar NGROK:", err);
-        }
     });
 }
 

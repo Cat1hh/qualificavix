@@ -8,10 +8,20 @@
 </head>
 <!-- BOTÃO DO CHAT -->
 <button id="chatBtn">Chat</button>
+<div id= "avatarImg">
+    <img id="avatarMascote" src="imagem/Vitoruga.png">
+</div>
+
 
 <!-- JANELA DO CHAT -->
 <div id="chatWindow">
-    <div id="chatHeader">Atendimento</div>
+    <div id="chatHeader">
+  Atendimento
+  <button id="muteToggle" style="float:right; background:transparent; border:none; color:#fff; font-size:20px; cursor:pointer;">
+      🔊
+  </button>
+</div>
+
 
     <div id="chatBody"></div>
 
@@ -70,13 +80,6 @@
     </a>
 </div>
 
-<div id="person-wrapper">
-    <img id="person-avatar" src="https://cdn-icons-png.flaticon.com/512/145/145867.png">
-    <p id="person-speaking">Falando...</p>
-
-    <button id="mute-btn">🔊 Mutar</button>
-</div>
-
 <table class="tabela-cursos">
     <thead>
         <tr>
@@ -94,6 +97,9 @@
 
     <tbody id="listaCursos"></tbody>
 </table>
+<a href="https://aistudio.google.com/apps/drive/1ljMEupKmhNpmd0Ke1WtZSYTw9g8GIUOf?showPreview=true&showAssistant=true" target="_blank" class="btn-whatsapp">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
+</a>
 
 <footer class="rodape">
     <div class="rodape-conteudo">
@@ -197,24 +203,29 @@ carregarCursos();
 <!-- ====================================================== -->
 <script>
 async function carregarFiltros() {
+
+    // IDADE
     let r1 = await fetch("http://localhost:3000/public/idade");
     let idades = await r1.json();
     let selIdade = document.querySelector("#filtro-idade");
     selIdade.innerHTML = '<option value="">Todas</option>';
     idades.forEach(i => selIdade.innerHTML += `<option>${i.idade}</option>`);
 
+    // CATEGORIA
     let r2 = await fetch("http://localhost:3000/public/categoria");
     let categorias = await r2.json();
     let selCategoria = document.querySelector("#filtro-categoria");
     selCategoria.innerHTML = '<option value="">Todas</option>';
     categorias.forEach(c => selCategoria.innerHTML += `<option>${c.categoria}</option>`);
 
+    // MODALIDADE
     let r3 = await fetch("http://localhost:3000/public/modalidade");
     let modalidades = await r3.json();
     let selModal = document.querySelector("#filtro-modalidade");
     selModal.innerHTML = '<option value="">Todas</option>';
     modalidades.forEach(m => selModal.innerHTML += `<option>${m.modalidade}</option>`);
 
+    // LOCAL
     let r4 = await fetch("http://localhost:3000/public/local");
     let locais = await r4.json();
     let selLocal = document.querySelector("#filtro-local");
@@ -274,186 +285,437 @@ async function inscrever(curso_id) {
 </style>
 
 <script>
-const chatBtn = document.getElementById('chatBtn');
-const chatWindow = document.getElementById('chatWindow');
-const chatBody = document.getElementById('chatBody');
-const chatInput = document.getElementById('chatInput');
-const chatSend = document.getElementById('chatSend');
+async function inscrever(curso_id) {
+    const nome = prompt("Seu nome:");
+    const email = prompt("Seu email:");
+    const telefone = prompt("Seu telefone:");
 
-chatBtn.addEventListener('click', () => {
-  chatWindow.style.display = chatWindow.style.display === 'block' ? 'none' : 'block';
-  if (chatWindow.style.display === 'block') chatInput.focus();
-});
-
-let muted = false;
-
-// =====================================
-// 🔊 SISTEMA DE VOZ (SPEECH API)
-// =====================================
-
-// ======= CONFIGURAÇÃO DE VOZ DO CHATBOT =======
-let vozAtiva = null;
-
-// Carrega vozes do navegador
-window.speechSynthesis.onvoiceschanged = () => {
-    const voices = speechSynthesis.getVoices();
-    vozAtiva = voices.find(v => v.lang === "pt-BR") || voices[0];
-};
-
-// Remove emojis antes de falar
-function limparEmojis(texto) {
-    return texto.replace(
-        /([\u2700-\u27BF]|[\uE000-\uF8FF]|[\uD83C-\uDBFF][\uDC00-\uDFFF]|\p{Extended_Pictographic})/gu,
-        ""
-    );
-}
-
-// Fala o texto
-function falarTexto(texto) {
-    if (muted) return;
-
-    const textoLimpo = limparEmojis(texto);
-
-    if (!textoLimpo.trim()) return; // evita falar "nada"
-
-    const utter = new SpeechSynthesisUtterance(textoLimpo);
-    utter.voice = vozAtiva;
-    utter.rate = 1;
-    utter.pitch = 1;
-
-    speechSynthesis.cancel();
-    speechSynthesis.speak(utter);
-
-    personSpeaking.style.display = "block";
-
-    utter.onend = () => {
-        personSpeaking.style.display = "none";
-    };
-}
-
-
-// =====================================
-
-function addMessage(who, text) {
-  const div = document.createElement('div');
-  div.className = 'chat-msg ' + (who === 'user' ? 'user' : 'bot');
-  const bubble = document.createElement('div');
-  bubble.className = 'bubble';
-
-  // 🔥 BOT FALA EM VOZ ALTA
-  if (who === "bot") {
-      falarTexto(text);
-  }
-
-  // 🔥 Transformar automaticamente links de pré-inscrição em botão
-  text = text.replace(
-    /(https?:\/\/[^\s]+pre_inscricao\.html\?id=\d+|pre_inscricao\.html\?id=\d+)/g,
-    `<a href="$1"
-       style="
-         display:inline-block;
-         background:#0aa;
-         color:#fff;
-         padding:8px 14px;
-         border-radius:8px;
-         text-decoration:none;
-         font-weight:bold;
-         margin-top:6px;
-         display:block;
-       ">
-       🚀 Fazer Pré-inscrição
-     </a>`
-  );
-
-  bubble.innerHTML = text;
-  div.appendChild(bubble);
-  chatBody.appendChild(div);
-  chatBody.scrollTop = chatBody.scrollHeight;
-}
-
-async function enviarMensagem() {
-  const text = chatInput.value.trim();
-  if (!text) return;
-
-  addMessage('user', text);
-  chatInput.value = '';
-
-  addMessage('bot', '⏳ Respondendo...');
-
-  if (/inscri|inscrever|matricul|pre[- ]?inscri/i.test(text)) {
-      const last = chatBody.querySelectorAll('.chat-msg.bot');
-      if (last.length) last[last.length - 1].remove();
-
-      const div = document.createElement('div');
-      div.className = 'chat-msg bot';
-
-      div.innerHTML = `
-        <div class="bubble">
-            Claro! Clique no botão abaixo para fazer sua pré-inscrição:
-            <br><br>
-            <a href="pre_inscricao.html"
-               style="
-                   display:inline-block;
-                   background:#0aa;
-                   color:#fff;
-                   padding:8px 14px;
-                   border-radius:8px;
-                   text-decoration:none;
-                   font-weight:bold;
-               ">
-               Fazer Pré-inscrição
-            </a>
-        </div>
-      `;
-
-      chatBody.appendChild(div);
-      chatBody.scrollTop = chatBody.scrollHeight;
-      return;
-  }
-
-  try {
-    const res = await fetch('/chat', {
-        method: 'POST',
-        headers:{ 'Content-Type':'application/json' },
-        body: JSON.stringify({ message: text })
+    const res = await fetch("http://localhost:3000/inscricao", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nome, email, telefone, curso_id })
     });
 
-    const data = await res.json();
+    const resposta = await res.json();
+    alert(resposta.status || resposta.error);
+}
+</script>
 
-    const last = chatBody.querySelectorAll('.chat-msg.bot');
-    if (last.length) last[last.length-1].remove();
+<style>
+/* chat */
+#chatBtn {
+  position: fixed; right: 20px; bottom: 20px;
+  background:#0aa; color:#fff; border:none; padding:12px 16px;
+  border-radius:50px; cursor:pointer; box-shadow:0 6px 14px rgba(0,0,0,0.2);
+  z-index: 10000;
+}
+#chatWindow {
+  position: fixed; right:20px; bottom:80px;
+  width:320px; max-height:60vh; background:#fff;
+  border-radius:8px; box-shadow:0 10px 30px rgba(0,0,0,0.2);
+  display:none; overflow:hidden; font-family:Arial; z-index:10001;
+}
+#chatHeader { background:#0aa; color:#fff; padding:10px; position:relative; }
+#muteToggle { position:absolute; right:10px; top:6px; background:transparent; border:none; color:#fff; font-size:18px; cursor:pointer; }
+#chatBody { padding:10px; height:40vh; overflow:auto; background:#fafafa; }
+.chat-msg { margin:8px 0; }
+.chat-msg.user { text-align:right; }
+.chat-msg .bubble {
+  display:inline-block; padding:8px 12px; border-radius:12px; max-width:80%;
+}
+.chat-msg.user .bubble { background:#0aa; color:#fff; }
+.chat-msg.bot .bubble { background:#f1f1f1; color:#111; }
+#chatInputWrap { display:flex; border-top:1px solid #eee; }
+#chatInput { flex:1; border:0; padding:10px; }
+#chatSend { border:0; background:#0aa; color:#fff; padding:10px 12px; cursor:pointer; }
 
-    addMessage('bot', data.reply || 'Desculpe, sem resposta.');
+/* avatar bubble */
+#avatarImg {
+    position: fixed;
+    right: 360px;
+    bottom: 40px;
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    border: 3px solid #1eff00;
+    z-index: 10000;
+    transition: transform 0.18s, box-shadow 0.18s;
+}
+#avatarImg img { width: 55px; height:55px; border-radius:50%; }
+#avatarImg.talking { transform: scale(1.08); box-shadow: 0 0 20px rgba(0,195,255,0.8); }
+</style>
 
-  } catch (e) {
-    const last = chatBody.querySelectorAll('.chat-msg.bot');
-    if (last.length) last[last.length-1].remove();
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const chatBtn = document.getElementById('chatBtn');
+  const chatWindow = document.getElementById('chatWindow');
+  const chatBody = document.getElementById('chatBody');
+  const chatInput = document.getElementById('chatInput');
+  const chatSend = document.getElementById('chatSend');
+  const muteToggle = document.getElementById('muteToggle');
+  const avatarBubble = document.getElementById('avatarBubble');
 
-    addMessage('bot', 'Erro ao enviar. Tente novamente.');
-  }
+  let muted = false;
+  let avatarTimeout = null;
+
+  // abrir/fechar chat
+  chatBtn.addEventListener('click', () => {
+    const open = chatWindow.style.display === 'block';
+    chatWindow.style.display = open ? 'none' : 'block';
+    chatWindow.setAttribute('aria-hidden', open ? 'true' : 'false');
+    if (!open) chatInput.focus();
+  });
+
+  // TTS respeitando mute
+  function speak(text) {
+  if (muted || !text.trim()) return;
+
+  if (speechSynthesis.speaking) speechSynthesis.cancel();
+
+  let t = text;
+
+  // Remove HTML
+  t = t.replace(/<[^>]+>/g, "");
+
+  // Remove markdown
+  t = t.replace(/[*_~`]/g, "");
+
+  // Remove emojis
+  t = t.replace(
+    /([\u2700-\u27BF]|[\uE000-\uF8FF]|[\uD83C-\uDBFF][\uDC00-\uDFFF])/g,
+    ""
+  );
+
+  // Substitui símbolos por fala
+  t = t
+    .replace(/📘/g, "") // ícone de livro
+    .replace(/📍/g, "Local: ")
+    .replace(/👥/g, "vagas: ")
+    .replace(/👉/g, "")
+    .replace(/🚀/g, "")
+    .replace(/—/g, " - ")
+    .replace(/\s+/g, " ") // limpa espaços extras
+    .trim();
+
+  const utter = new SpeechSynthesisUtterance(t);
+  utter.lang = "pt-BR";
+  utter.rate = 1;
+  utter.pitch = 1;
+  utter.volume = 1;
+
+  utter.onstart = startAvatarTalking;
+  utter.onend = stopAvatarTalking;
+
+  speechSynthesis.speak(utter);
 }
 
-chatSend.addEventListener('click', enviarMensagem);
-chatInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') enviarMensagem();
-});
 
-const personSpeaking = document.getElementById("person-speaking");
-const muteBtn = document.getElementById("mute-btn");
 
-muteBtn.addEventListener("click", () => {
-    muted = !muted;
+  // animação do avatar
+  function startAvatarTalking() {
+    if (!avatarBubble) return;
+    clearTimeout(avatarTimeout);
+    avatarBubble.classList.add('talking');
+  }
 
-    if (muted) {
-        personSpeaking.style.display = "none";
-        muteBtn.textContent = "🔈 Desmutar";
-        muteBtn.classList.add("muted");
-    } else {
-        personSpeaking.style.display = "block";
-        muteBtn.textContent = "🔊 Mutar";
-        muteBtn.classList.remove("muted");
+  function stopAvatarTalking() {
+    if (!avatarBubble) return;
+    clearTimeout(avatarTimeout);
+    avatarBubble.classList.remove('talking');
+  }
+
+  // mute
+  if (muteToggle) {
+    muteToggle.addEventListener('click', () => {
+      muted = !muted;
+      muteToggle.textContent = muted ? '🔇' : '🔊';
+      muteToggle.setAttribute('aria-pressed', muted);
+
+      if (muted && speechSynthesis.speaking) speechSynthesis.cancel();
+    });
+  }
+
+  // adiciona mensagens
+  function addMessage(who, htmlText) {
+    const div = document.createElement('div');
+    div.className = `chat-msg ${who === 'user' ? 'user' : 'bot'}`;
+
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble';
+
+    // melhora o regex do botão
+    const text = htmlText.replace(
+      /(https?:\/\/[^\s]*pre_inscricao\.html\?id=\d+|pre_inscricao\.html\?id=\d+)/g,
+      `<a href="$1" style="background:#0aa;color:#fff;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:bold;display:block;margin-top:6px;">🚀 Fazer Pré-inscrição</a>`
+    );
+
+    bubble.innerHTML = text;
+    div.appendChild(bubble);
+    chatBody.appendChild(div);
+    chatBody.scrollTop = chatBody.scrollHeight;
+
+    if (who === 'bot') {
+      speak(text.replace(/<[^>]*>?/gm, ''));
     }
+  }
+
+  // enviar mensagem
+  async function enviarMensagem() {
+    const text = chatInput.value.trim();
+    if (!text) return;
+
+    addMessage('user', text);
+    chatInput.value = '';
+
+    addMessage('bot', '⏳ Respondendo...');
+
+    // resposta local para "inscrição"
+    if (/inscri|inscrever|matricul|pre[- ]?inscri/i.test(text)) {
+      chatBody.querySelector('.chat-msg.bot:last-child')?.remove();
+
+      addMessage('bot', `
+        Claro! Clique no botão abaixo para fazer sua pré-inscrição:
+        <br><br>
+        <a href="pre_inscricao.html" style="background:#0aa;color:#fff;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:bold;display:inline-block;">Fazer Pré-inscrição</a>
+      `);
+      return;
+    }
+
+    try {
+      const res = await fetch('/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: text })
+      });
+
+      const data = await res.json();
+
+      chatBody.querySelector('.chat-msg.bot:last-child')?.remove();
+
+      const respostaFiltrada = filtrarCursos(data.reply, text);
+      addMessage('bot', respostaFiltrada);
+
+    } catch (err) {
+      chatBody.querySelector('.chat-msg.bot:last-child')?.remove();
+      addMessage('bot', 'Erro ao enviar. Tente novamente.');
+    }
+  }
+
+  chatSend.addEventListener('click', enviarMensagem);
+  chatInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter') enviarMensagem();
+  });
+
+  if (avatarBubble) {
+    avatarBubble.addEventListener('click', () => {
+      chatWindow.style.display = 'block';
+      chatInput.focus();
+    });
+  }
 });
+function removerEmojis(texto) {
+  return texto.replace(
+    /([\u2700-\u27BF]|[\uE000-\uF8FF]|[\uD83C-\uDBFF][\uDC00-\uDFFF])/g,
+    ""
+  ).trim();
+}
+// Dicionário de cursos + abreviações/sinônimos
+const mapaCursos = {
+  "administração": ["adm", "admin", "administracao"],
+  "artesanato": ["artes", "artesan"],
+  "automação industrial": ["auto", "automacao", "industrial", "automa"],
+  "beleza": ["estetica", "beleza"],
+  "cinema": ["cine"],
+  "comércio / gestão empresarial": ["comercio", "gestao", "empresarial", "gest"],
+  "confecção": ["confeccao", "confec"],
+  "construção civil / serviço": ["construcao", "civil", "servico", "obra"],
+  "cultura": ["cultur"],
+  "dança": ["danca"],
+  "dança e teatro": ["teatro", "danca"],
+  "educação": ["educa"],
+  "eletrônica": ["eletron", "eletronica"],
+  "eletricista / energia": ["eletric", "energia"],
+  "enfermagem / saúde": ["enf", "enfermagem", "saude"],
+  "estética": ["estetica"],
+  "eventos": ["event"],
+  "fotografia": ["foto", "fotografia"],
+  "gastronomia": ["gastro", "cozinha"],
+  "gestão": ["gestao", "gest"],
+  "idiomas": ["idioma", "ingles", "espanhol", "frances"],
+  "informática / tecnologia": ["info", "informatica", "tec", "tecnologia", "ti"],
+  "logística": ["log", "logistica"],
+  "manutenção": ["manutencao", "manu"],
+  "mecânica": ["mec", "mecanica"],
+  "meio ambiente": ["ambiente", "meio"],
+  "moda": ["moda", "fashion"],
+  "música": ["mus", "musica"],
+  "panificação / confeitaria": ["pani", "pao", "confeitaria"],
+  "produção cultural": ["producao", "cultural"],
+  "programação / ti": ["programacao", "programar", "prog", "dev", "codigo", "ti"],
+  "recursos humanos": ["rh", "recurso", "humanos"],
+  "redes / telecom": ["redes", "telecom", "net", "wifi", "rede"],
+  "segurança do trabalho": ["seg", "seguranca", "trabalho", "sst"],
+  "serviço social": ["servico", "social", "ss"],
+  "soldagem": ["solda", "sold"],
+  "turismo / hotelaria": ["tur", "turismo", "hotelaria", "hotel"],
+  "vendas / marketing": ["vendas", "marketing", "mkt"]
+};
+
+function filtrarCursos(respostaBruta, textoUsuario) {
+  const normalizar = t =>
+    removerEmojis(t).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+  const user = normalizar(textoUsuario);
+
+  // extrair termo
+  let termo = user
+    .replace(/curso(s)?\s*(de)?\s*/g, "")
+    .trim();
+
+  if (!termo) return respostaBruta;
+
+  const termoNorm = normalizar(termo);
+
+  // montar lista de sinônimos e abreviações
+  const sinonimos = [];
+
+  for (const nome in mapaCursos) {
+    const nomeNorm = normalizar(nome);
+    sinonimos.push({ nome, nomeNorm, keys: mapaCursos[nome].map(normalizar) });
+  }
+
+  // identificar cursos que correspondem ao termo
+  const cursosDetectados = sinonimos.filter(c => {
+    if (c.nomeNorm.includes(termoNorm) || termoNorm.includes(c.nomeNorm)) return true;
+    if (c.keys.some(k => k.startsWith(termoNorm))) return true;
+    if (c.keys.some(k => termoNorm.startsWith(k))) return true;
+    return false;
+  });
+
+  if (cursosDetectados.length === 0) {
+    return `Nenhum curso encontrado para "${termo}".`;
+  }
+
+  // separar em blocos pelo 📘
+  const blocos = respostaBruta
+    .split(/📘/g)
+    .map(b => b.trim())
+    .filter(b => b.length > 5)
+    .map(b => "📘 " + b);
+
+  const resultados = [];
+
+  for (const bloco of blocos) {
+    const blocoNorm = normalizar(bloco);
+
+    if (cursosDetectados.some(c => blocoNorm.includes(c.nomeNorm))) {
+      resultados.push(bloco);
+    }
+  }
+
+  if (resultados.length === 0) {
+    return `Curso encontrado, mas nenhum resultado disponível no momento.`;
+  }
+
+  return `
+📚 <b>${resultados.length}</b> curso(s) encontrado(s) relacionado(s) a <b>${termo}</b>:
+<br><br>
+${resultados.join("<br><br>")}
+  `;
+}
+
 </script>
+<script>
+// ============================
+//     AVATAR DO CHATBOT
+// ============================
+const avatarImg = document.getElementById("avatarImg");
+
+// avatar padrão
+const avatarPadrao = "imagem/Vitoruga.png";
+
+// mapa de imagens do avatar por curso
+const avatarCursos = {
+  gastronomia: "imagem/Vitoruga gastronômica.png",
+  culinaria: "imagem/Vitoruga gastronômica.png",
+  cozinha: "imagem/Vitoruga gastronômica.png",
+
+  artesanato: "imagem/Vitoruga artesã.png",
+  artesanal: "imagem/Vitoruga artesã.png",
+
+  metalurgia: "imagem/Vitoruga metalurgica.png",
+  mecanica: "imagem/Vitoruga metalurgica.png",
+  soldagem: "imagem/Vitoruga metalurgica.png",
+  solda: "imagem/Vitoruga metalurgica.png",
+
+  construcao: "imagem/Vitoruga construção civil.png",
+  pedreiro: "imagem/Vitoruga construção civil.png",
+  obra: "imagem/Vitoruga construção civil.png",
+  civil: "imagem/Vitoruga construção civil.png",
+};
+
+// normalizar texto
+function normalizarAvatar(t) {
+  return t
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+}
+
+// ======== TROCAR AVATAR SOMENTE SE FOR FILTRO DE CURSOS ========
+function atualizarAvatarSeCurso(texto) {
+  const t = normalizarAvatar(texto);
+
+  // só troca avatar se o texto mencionar "curso"
+  if (!t.includes("curso") && !t.includes("cursos")) {
+    avatarImg.src = avatarPadrao;
+    return;
+  }
+
+  // remove prefixo "curso de ..."
+  let termo = t.replace(/curso(s)?( de)?/g, "").trim();
+
+  if (!termo) {
+    avatarImg.src = avatarPadrao;
+    return;
+  }
+
+  // procura curso relacionado
+  for (const key in avatarCursos) {
+    if (termo.includes(key)) {
+      avatarImg.src = avatarCursos[key];
+      return;
+    }
+  }
+
+  // se não encontrou o curso digitado → volta ao normal
+  avatarImg.src = avatarPadrao;
+}
+
+// Atualiza avatar enquanto o usuário DIGITA
+document.getElementById("chatInput").addEventListener("input", e => {
+  atualizarAvatarSeCurso(e.target.value);
+});
+
+// Atualiza avatar depois que ele ENVIA a mensagem
+function enviarMensagem() {
+  const texto = chatInput.value.trim();
+
+  atualizarAvatarSeCurso(texto);
+
+  // ... resto do seu código original ...
+}
+
+</script>
+
+
+
+
 
 </body>
 </html>
