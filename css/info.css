@@ -1,0 +1,552 @@
+/* --- Estilos Gerais --- */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    width: 85%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px 0;
+}
+
+.section {
+    padding: 40px 0;
+    text-align: center;
+}
+
+.bg-light {
+    background-color: #e9e9f2;
+}
+
+h1, h2 {
+    color: #0056b3; /* Azul primário de destaque */
+}
+
+h2 {
+    font-size: 2em;
+    margin-bottom: 30px;
+    border-bottom: 3px solid #0056b3;
+    display: inline-block;
+    padding-bottom: 5px;
+}
+
+/* --- Cabeçalho (Hero) --- */
+.hero {
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('background_vix.jpg') no-repeat center center/cover;
+    color: white;
+    padding: 100px 0;
+    text-align: center;
+}
+
+.hero h1 {
+    font-size: 3.5em;
+    margin: 0;
+    color: white;
+}
+
+.hero p {
+    font-size: 1.4em;
+    margin-bottom: 30px;
+    font-weight: 300;
+}
+
+.btn-cta {
+    display: inline-block;
+    background-color: #ff9900; /* Laranja vibrante para CTA */
+    color: white;
+    padding: 12px 25px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.btn-cta:hover {
+    background-color: #e68a00;
+}
+
+/* --- Seção Sobre --- */
+.diferenciais {
+    list-style: none;
+    padding: 0;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.diferenciais li {
+    display: inline-block;
+    margin: 0 15px;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #0056b3;
+}
+
+/* --- Seção Carretas (Imagens) --- */
+.image-gallery {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin: 30px 0;
+}
+
+.gallery-item {
+    flex-basis: 45%;
+    max-width: 450px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.gallery-item img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+}
+
+.caption {
+    background-color: #0056b3;
+    color: white;
+    padding: 10px;
+    font-size: 0.9em;
+}
+
+.note {
+    font-style: italic;
+    color: #666;
+    margin-top: 20px;
+}
+
+/* --- Seção Parceiros --- */
+.parceiros-logos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+    margin: 30px 0;
+    flex-wrap: wrap;
+}
+
+.logo-item {
+    text-align: center;
+}
+
+.logo-item img {
+    max-height: 80px;
+    width: auto;
+    margin-bottom: 5px;
+    filter: grayscale(10%); /* Deixa a imagem um pouco mais discreta */
+    transition: filter 0.3s;
+}
+
+.logo-item img:hover {
+    filter: grayscale(0%);
+}
+
+/* --- Seção Cursos --- */
+.grid-cursos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin: 30px 0;
+}
+
+.curso-card {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-weight: bold;
+    color: #0056b3;
+    border-left: 5px solid #ff9900;
+    transition: transform 0.3s;
+}
+
+.curso-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.call-to-action {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #ff9900;
+    margin-top: 40px;
+}
+
+/* --- Rodapé --- */
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 15px 0;
+    font-size: 0.9em;
+}
+
+/* --- Responsividade Básica --- */
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 2.5em;
+    }
+
+    .hero p {
+        font-size: 1.2em;
+    }
+
+    .image-gallery {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .gallery-item {
+        flex-basis: 90%;
+    }
+}
+/* --- Estilos Gerais --- */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    width: 85%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px 0;
+}
+
+.section {
+    padding: 40px 0;
+    text-align: center;
+}
+
+.bg-light {
+    background-color: #e9e9f2;
+}
+
+h2 {
+    color: #E55959; /* Cor principal da logo nos títulos */
+    font-size: 2em;
+    margin-bottom: 30px;
+    border-bottom: 3px solid #E55959;
+    display: inline-block;
+    padding-bottom: 5px;
+}
+
+/* --- Cabeçalho (Hero) MODIFICADO --- */
+.hero {
+    /* Aplicando o degradê conforme a imagem: do Vermelho/Rosa (esquerda) para Laranja (direita) */
+    background: linear-gradient(to right, #E55959, #FF9900);
+    color: white;
+    padding: 80px 0; /* Ajuste o padding para centralizar bem */
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilo para a imagem da logo dentro do banner */
+.logo-hero {
+    max-width: 400px; /* Tamanho da logo conforme a imagem de exemplo */
+    height: auto;
+    margin-bottom: 10px;
+}
+
+.hero p {
+    font-size: 1.4em;
+    margin-bottom: 30px;
+    font-weight: 300;
+    color: white; /* Garante que o texto da descrição fique branco */
+}
+
+.btn-cta {
+    /* Cor do CTA: Laranja vibrante para contraste */
+    display: inline-block;
+    background-color: #f4f4f9; 
+    color: #E55959; /* Cor do texto no CTA: Vermelho/Rosa da logo */
+    padding: 12px 25px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s, color 0.3s;
+    border: 2px solid #E55959; /* Borda para dar destaque */
+}
+
+.btn-cta:hover {
+    background-color: #E55959;
+    color: white;
+    border-color: white;
+}
+
+/* --- Seção Sobre --- */
+.diferenciais {
+    list-style: none;
+    padding: 0;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.diferenciais li {
+    display: inline-block;
+    margin: 0 15px;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #FF9900; /* Use o laranja da logo aqui */
+}
+
+/* --- Seção Carretas (Imagens) --- */
+.image-gallery {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin: 30px 0;
+}
+
+.gallery-item {
+    flex-basis: 45%;
+    max-width: 450px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.gallery-item img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+}
+
+.caption {
+    background-color: #E55959; /* Cor da legenda: Vermelho/Rosa da logo */
+    color: white;
+    padding: 10px;
+    font-size: 0.9em;
+}
+
+.note {
+    font-style: italic;
+    color: #666;
+    margin-top: 20px;
+}
+
+/* --- Seção Parceiros --- */
+.parceiros-logos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+    margin: 30px 0;
+    flex-wrap: wrap;
+}
+
+.logo-item {
+    text-align: center;
+}
+
+.logo-item img {
+    max-height: 80px;
+    width: auto;
+    margin-bottom: 5px;
+    filter: grayscale(10%); 
+    transition: filter 0.3s;
+}
+
+.logo-item img:hover {
+    filter: grayscale(0%);
+}
+
+/* --- Seção Cursos --- */
+.grid-cursos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin: 30px 0;
+}
+
+.curso-card {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-weight: bold;
+    color: #E55959; /* Cor do texto no card */
+    border-left: 5px solid #FF9900; /* Destaque lateral com a cor Laranja da logo */
+    transition: transform 0.3s;
+}
+
+.curso-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.call-to-action {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #FF9900; /* Destaque Laranja */
+    margin-top: 40px;
+}
+
+/* --- Rodapé --- */
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 15px 0;
+    font-size: 0.9em;
+}
+
+/* --- Responsividade Básica --- */
+@media (max-width: 768px) {
+    .logo-hero {
+        max-width: 80%;
+    }
+    
+    .hero p {
+        font-size: 1.1em;
+    }
+
+    .image-gallery {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .gallery-item {
+        flex-basis: 90%;
+    }
+}/* ... (Código anterior) ... */
+
+/* Estilo para a imagem da logo dentro do banner */
+.logo-hero {
+    max-width: 400px; 
+    height: auto;
+    margin-bottom: 10px;
+    
+    /* Adiciona a transição suave para que a mudança não seja abrupta */
+    transition: transform 0.3s ease-in-out; 
+}
+
+/* NOVO: Efeito de "Salto" (Hover Effect) */
+.logo-hero:hover {
+    /* Aumenta a logo em 5% (scale(1.05)) */
+    /* Move a logo 5 pixels para cima (translateY(-5px)) */
+    transform: scale(1.05) translateY(-5px); 
+    /* Adiciona uma sombra suave para o efeito de flutuação */
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
+    cursor: pointer; /* Muda o cursor para indicar que é clicável/interativo */
+}
+
+/* ... (Resto do código CSS) ... */
+/* --- Seção Parceiros --- */
+.parceiros-logos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+    margin: 30px 0;
+    flex-wrap: wrap;
+}
+
+.logo-item {
+    text-align: center;
+}
+
+.logo-item img {
+    /* MUDANÇA AQUI: Aumentando o tamanho máximo da altura da imagem */
+    max-height: 120px; 
+    /* Você pode ajustar o 120px para o tamanho que desejar (ex: 100px, 150px) */
+    
+    width: auto;
+    margin-bottom: 5px;
+    filter: grayscale(10%); 
+    transition: filter 0.3s;
+}
+
+.logo-item img:hover {
+    filter: grayscale(0%);
+}
+.parceiros-logos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Aumentando o espaço entre as logos, se necessário: */
+    gap: 70px; 
+    margin: 30px 0;
+    flex-wrap: wrap;
+}
+/* --- Seção Parceiros --- */
+.parceiros-logos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 70px; /* Mantido o espaçamento maior para as logos grandes */
+    margin: 30px 0;
+    flex-wrap: wrap;
+}
+
+/* NOVO: Estilo para o link que envolve a logo */
+.logo-link {
+    text-decoration: none; /* Remove o sublinhado */
+    color: inherit; /* Garante que a cor do texto seja herdada */
+    cursor: pointer; /* Indica que é um elemento clicável */
+    display: block; /* Garante que o link ocupe toda a área do item */
+}
+
+.logo-item {
+    text-align: center;
+    /* Adiciona transição para a imagem do hover */
+    transition: transform 0.3s; 
+}
+
+/* Adiciona um hover suave no item (logo + texto) */
+.logo-link:hover .logo-item {
+    transform: translateY(-5px); /* Efeito de levitação ao passar o mouse */
+}
+
+
+.logo-item img {
+    /* Manter o tamanho maior das logos */
+    max-height: 120px; 
+    
+    width: auto;
+    margin-bottom: 5px;
+    filter: grayscale(10%); 
+    transition: filter 0.3s;
+}
+
+.logo-item img:hover {
+    filter: grayscale(0%);
+}
+/* ... (Resto do Código CSS) ... */
+/* --- ANIMAÇÕES DE SCROLL REVEAL --- */
+
+/* 1. Define o estado inicial (escondido, levemente abaixo e transparente) */
+.scroll-hidden {
+    opacity: 0;
+    transform: translateY(50px); /* Começa 50px abaixo da posição final */
+    transition: opacity 1s ease-out, transform 0.8s ease-out;
+    transition-delay: 0.1s; /* Pequeno atraso para as coisas aparecerem em sequência */
+}
+
+/* 2. Define o estado final (aparecendo) */
+.scroll-show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* 3. Ajuste de transição para o Cabeçalho (Hero) se desejar */
+/* O cabeçalho já está visível, mas podemos tirar o efeito para evitar problemas no carregamento */
+header.hero {
+    opacity: 1;
+    transform: translateY(0);
+}
