@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Cursos</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body> 
+
+    <button id="chatBtn">Chat</button>
+    <div id="avatarImg">
+        <img id="avatarMascote" src="../imagem/Vitoruga.png" alt="Mascote">
+    </div>
+
+    <div id="chatWindow">
+        <div id="chatHeader">
+            Atendimento
+            <button id="muteToggle" style="float:right; background:transparent; border:none; color:#fff; font-size:20px; cursor:pointer;">
+                🔊
+            </button>
+        </div>
+        <div id="chatBody"></div>
+        <div id="chatInputWrap">
+            <input id="chatInput" type="text" placeholder="Digite sua mensagem...">
+            <button id="chatSend">Enviar</button>
+        </div>
+    </div>
+
+    <main class="conteudo-principal">
+        
+        <header class="banner">
+            <div class="stats-container">
+                <div class="stat-box">
+                    <span class="numero" id="vagasHoje">0</span>
+                    <p>vagas disponíveis</p>
+                </div>
+
+                <img src="../imagem/VIxcursos.png" class="logo-ativa" alt="Logo">
+
+                <div class="stat-box">
+                    <span class="numero" id="vagas2026">0</span>
+                    <p>preenchidas em 2026</p>
+                </div>
+            </div>
+
+            <div class="custom-shape-divider-bottom">
+                <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                    <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" fill="#f7f7f7"></path>
+                </svg>
+            </div>
+        </header>
+
+        <section class="filtros-card">
+            <div class="filtro-item">
+                <label>Idade:</label>
+                <select id="filtro-idade"></select>
+            </div>
+
+            <div class="filtro-item">
+                <label>Categoria:</label>
+                <select id="filtro-categoria"></select>
+            </div>
+
+            <div class="filtro-item">
+                <label>Local:</label>
+                <select id="filtro-local"></select>
+            </div>
+
+            <div class="filtro-item" style="display: flex; align-items: flex-end;">
+                <button id="btn-limpar" class="btn-tema btn-escuro" style="width: 100%; height: 45px; margin-bottom: 5px;">
+                    Limpar Filtros
+                </button>
+            </div>
+        </section>
+        
+        <div class="banner-botoes">
+            <a href="../pages/informacoes.html" class="btn-tema btn-claro">Sobre o Projeto</a>
+            
+            <button id="btnAbrirQuiz" class="btn-tema btn-escuro" style="background: linear-gradient(90deg, #f9c852 0%, #f6a654 100%); color: #0f2247;">Qual Meu Curso?</button>
+            
+            <a href="https://www.vitoria.es.gov.br" target="_blank" class="btn-tema btn-escuro">Prefeitura de Vitória</a>
+        </div>
+
+        <div id="containerCursos" class="container-cards">
+            </div>
+
+    </main> 
+    
+    <footer class="rodape">
+        <div class="rodape-conteudo">
+            <div class="rodape-coluna">
+                <img src="../imagem/VIxcursos.png" class="logo-rodape" alt="Logo Vix Cursos">
+                <p>O portal que conecta VOCÊ às melhores oportunidades de cursos gratuitos.</p>
+            </div>
+
+            <div class="rodape-coluna">
+                <h4>Siga-nos</h4>
+                <div class="social">
+                    <a href="#">📘</a>
+                    <a href="#">📸</a>
+                    <a href="#">▶️</a>
+                    <a href="../admin/menu.html">💼</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="rodape-copy">
+            © 2025 Vix Cursos. Todos os direitos reservados.
+        </div>
+    </footer>
+
+    <div id="quizModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <button id="fecharQuiz" class="close-modal">&times;</button>
+            
+            <div class="quiz-header">
+                <h2>Descubra seu Perfil!</h2>
+                <p>Responda rápido e veja qual caminhão tem a sua cara.</p>
+            </div>
+
+            <div id="quizBody">
+                </div>
+            
+            <div id="quizResultado" style="display: none;">
+                <h3 id="resultadoTitulo">Seu perfil é...</h3>
+                <p id="resultadoTexto">Descrição do perfil vai aqui.</p>
+                
+                <div class="lead-form">
+                    <h4>Quer ser avisado sobre vagas na sua região?</h4>
+                    <input type="text" id="leadNome" placeholder="Seu Nome" required>
+                    <input type="tel" id="leadWhatsapp" placeholder="Seu WhatsApp" required>
+                    <input type="email" id="leadEmail" placeholder="Seu E-mail" required>
+                    <select id="leadRegiao" required>
+                        <option value="">Selecione sua Região...</option>
+                        <option value="centro">Centro</option>
+                        <option value="maruipe">Maruípe</option>
+                        <option value="sao_pedro">São Pedro</option>
+                        <option value="santo_antonio">Santo Antônio</option>
+                        <option value="praia_do_canto">Praia do Canto</option>
+                        <option value="continental">Continental</option>
+                        <option value="goiabeiras">Goiabeiras</option>
+                        <option value="jardim_camburi">Jardim Camburi</option>
+                    </select>
+                    <button id="btnSalvarLead" class="btn-tema btn-escuro" style="width: 100%; margin-top: 10px;">Me Avise!</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="../script/script.js"></script>
+    <script src="../script/detalhes.js"></script>
+    </body>
+</html>

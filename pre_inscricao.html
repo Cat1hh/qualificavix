@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pré-inscrição - Vix Cursos</title>
+    <link rel="stylesheet" href="../css/pre-inscricao.css">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo">Vix Cursos</div>
+        <nav>
+            <a href="index.html">Início</a>
+            <a href="informacoes.html">Sobre</a>
+        </nav>
+    </header>
+
+    <main class="conteudo-principal">
+        <div class="form-container">
+            <h2 class="form-titulo">🚀 Formulário de Pré-inscrição</h2>
+            <p class="form-subtitulo">Preencha seus dados com atenção. Esta etapa é fundamental para garantir sua vaga.</p>
+
+            <form id="formInscricao" action="#" method="POST">
+                
+                <div class="form-section">
+                    <h3 class="form-section-title">📍 Vínculo com o Município</h3>
+                    <p style="color: #94A3B8; font-size: 14px; margin-bottom: 10px;">Confirma que você mora ou trabalha no município de Vitória/ES?</p>
+                    <div class="radio-group">
+                        <label class="radio-item"><input type="radio" name="mora_vitoria" value="sim" required> SIM, sou morador ou trabalho em Vitória/ES</label>
+                        <label class="radio-item"><input type="radio" name="mora_vitoria" value="nao"> NÃO sou morador e não trabalho em Vitória/ES</label>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3 class="form-section-title">👤 Dados Cadastrais</h3>
+                    <div class="form-row">
+                        <div class="form-group"><label>Nome completo *</label><input type="text" class="form-control" name="nome" id="nome" required></div>
+                        <div class="form-group"><label>Nome Social</label><input type="text" class="form-control" name="nome_social" placeholder="Opcional"></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group"><label>Data de nascimento *</label><input type="date" class="form-control" name="data_nascimento" required></div>
+                        <div class="form-group"><label>CPF *</label><input type="text" class="form-control" name="cpf" id="cpf" placeholder="000.000.000-00" maxlength="14" required></div>
+                        <div class="form-group"><label>Sexo *</label>
+                            <select class="form-control" name="sexo" required>
+                                <option value="">(Selecione)</option>
+                                <option>Masculino</option>
+                                <option>Feminino</option>
+                            </select>
+                        </div>
+                        <div class="form-group"><label>Orientação sexual *</label>
+                            <select class="form-control" name="orientacao_sexual" required><option value="">(Selecione)</option><option>Heterossexual</option><option>Homossexual</option><option>Bissexual</option><option>Outros</option></select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group" style="flex: 2;"><label>Escolaridade *</label>
+                            <select class="form-control" name="escolaridade" required><option value="">(Selecione)</option><option>Ensino Fundamental Incompleto</option><option>Ensino Médio Completo</option></select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group"><label>RG</label><input type="text" class="form-control" name="rg"></div>
+                        <div class="form-group"><label>UF RG</label><select class="form-control" name="uf_rg"><option>ES</option><option>RJ</option><option>SP</option></select></div>
+                        <div class="form-group"><label>CNH</label><input type="text" class="form-control" name="cnh"></div>
+                        <div class="form-group"><label>Religiosidade *</label><select class="form-control" name="religiosidade" required><option>(Selecione)</option><option>Católico</option><option>Evangélico</option><option>Outras</option></select></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group"><label>País de naturalidade</label><input type="text" class="form-control" name="pais_naturalidade" value="Brasil"></div>
+                        <div class="form-group"><label>Estado</label><select class="form-control" name="estado_naturalidade"><option>ES</option></select></div>
+                        <div class="form-group"><label>Município</label><input type="text" class="form-control" name="municipio_naturalidade"></div>
+                        <div class="form-group"><label>Declaração Raça/Cor *</label><select class="form-control" name="raca_cor" required><option>Branca</option><option>Preta</option><option>Parda</option></select></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group"><label>Tel. Residencial / Celular *</label><input type="tel" class="form-control" name="telefone" id="telefone" placeholder="(00) 00000-0000" maxlength="15" required></div>
+                        <div class="form-group"><label>Telefones Para Contato</label><input type="tel" class="form-control" name="telefone_contato"></div>
+                        <div class="form-group"><label>E-mail *</label><input type="email" class="form-control" name="email" id="email" required></div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3 class="form-section-title">🏠 Endereço</h3>
+                    <div class="form-row">
+                        <div class="form-group"><label>CEP *</label><input type="text" class="form-control" name="cep" id="cep" placeholder="00000-000" maxlength="9" required></div>
+                        <div class="form-group"><label>Município *</label><input type="text" class="form-control" name="municipio" id="municipio" value="Vitória" readonly></div>
+                        <div class="form-group"><label>Bairro *</label><input type="text" class="form-control" name="bairro" id="bairro" required></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group" style="flex: 2;"><label>Rua *</label><input type="text" class="form-control" name="rua" id="rua" required></div>
+                        <div class="form-group"><label>Número *</label><input type="text" class="form-control" name="numero" required></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group"><label>Complemento</label><input type="text" class="form-control" name="complemento"></div>
+                        <div class="form-group" style="flex: 2;"><label>Ponto de referência</label><input type="text" class="form-control" name="ponto_referencia"></div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3 class="form-section-title">♿ Deficiências</h3>
+                    <p style="color: #94A3B8; font-size: 14px; margin-bottom: 10px;">Possui deficiência?</p>
+                    <div class="radio-group" style="margin-bottom: 15px;">
+                        <label class="radio-item"><input type="radio" name="tem_def" value="sim"> SIM</label>
+                        <label class="radio-item"><input type="radio" name="tem_def" value="nao" checked> NÃO</label>
+                    </div>
+                    <div class="checkbox-grid">
+                        <label class="check-item"><input type="checkbox"> Altas habilidades/superdotação</label>
+                        <label class="check-item"><input type="checkbox"> Autismo</label>
+                        <label class="check-item"><input type="checkbox"> Baixa visão</label>
+                        <label class="check-item"><input type="checkbox"> Cegueira</label>
+                        <label class="check-item"><input type="checkbox"> Deficiência auditiva</label>
+                        <label class="check-item"><input type="checkbox"> Deficiência física</label>
+                        <label class="check-item"><input type="checkbox"> Deficiência intelectual</label>
+                        <label class="check-item"><input type="checkbox"> Síndrome de Asperger</label>
+                        <label class="check-item"><input type="checkbox"> Surdez</label>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3 class="form-section-title">📸 Uso de Imagem & Termos</h3>
+                    <p style="color: #94A3B8; font-size: 14px; margin-bottom: 10px;">A utilização de imagem do aluno está autorizada?</p>
+                    <div class="radio-group" style="margin-bottom: 20px;">
+                        <label class="radio-item"><input type="radio" name="imagem_autorizada" value="sim" required> SIM. Autorizada caso haja necessidade.</label>
+                        <label class="radio-item"><input type="radio" name="imagem_autorizada" value="nao"> NÃO está autorizada.</label>
+                    </div>
+
+                    <div class="termos-box">
+                        <h4>Termo de compromisso</h4>
+                        <p>Estou ciente que:</p>
+                        <ol>
+                            <li>Ao fazer a pré-inscrição, confirmo que tenho os Pré-Requisitos necessários.</li>
+                            <li>Esta operação NÃO me garante vaga no curso, exceto após a matrícula oficial.</li>
+                            <li>Não confirmando a minha inscrição no dia, perco automaticamente a vaga.</li>
+                        </ol>
+                        <label class="check-item" style="margin-top: 15px; color: #f9c852; font-weight: bold;">
+                            <input type="checkbox" name="termo_aceito" required> Li e concordo com os termos de compromisso.
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-voltar" onclick="window.history.back()">⬅ Retornar</button>
+                    <button type="submit" class="btn-confirmar">✅ Confirmar Pré-inscrição</button>
+                </div>
+
+            </form>
+        </div>
+    </main>
+
+    <footer class="rodape">
+        <div class="rodape-copy">© 2025 Vix Cursos. Todos os direitos reservados.</div>
+    </footer>
+
+    <script src="../script/pre_inscricao.js"></script>
+</body>
+</html>
