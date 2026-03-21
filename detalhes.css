@@ -1,0 +1,261 @@
+/* ==========================================
+   TEMA DARK PROFISSIONAL (Estilo Alura)
+========================================== */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+
+:root {
+    --bg-dark: #05091F;      /* Fundo Azul Quase Preto */
+    --verde-neon: #e07e5d;   /* Verde chamativo */
+    --azul-btn: #1D4ED8;     /* Azul Royal do Botão */
+    --azul-btn-hover: #1E40AF;
+    --texto-branco: #f0efee;
+    --texto-cinza: #94A3B8;  /* Cinza para subtítulos */
+    --borda-escura: #111827;
+    --fundo-caixa: #0F172A;  /* Um azul um pouco mais claro para as caixas */
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--texto-branco);
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
+
+.alura-theme-prof {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* ================= NAVEGAÇÃO ================= */
+.top-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4rem;
+    border-bottom: 1px solid #1F2937;
+    padding-bottom: 1rem;
+}
+
+.micro-text {
+    font-size: 0.7rem;
+    color: var(--texto-cinza);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.link-voltar {
+    color: var(--texto-cinza);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.3s;
+}
+
+.link-voltar:hover {
+    color: var(--verde-neon);
+    text-decoration: underline;
+}
+
+/* ================= HERO SECTION (Topo) Atualizado ================= */
+.hero-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Centraliza verticalmente a foto e o texto */
+    gap: 4rem;
+    margin-bottom: 5rem;
+}
+
+.hero-content {
+    flex: 1;
+    max-width: 600px;
+}
+
+.tag-formacao {
+    color: var(--verde-neon);
+    font-weight: 800;
+    font-size: 1rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.linha-accent {
+    width: 30px;
+    height: 3px;
+    background-color: var(--verde-neon);
+    margin: 0.5rem 0 1.5rem 0;
+}
+
+#detalhe-nome {
+    font-size: 3.5rem; /* Título bem grande e poderoso */
+    font-weight: 800;
+    margin: 0 0 0.5rem 0;
+    line-height: 1.1;
+    color: var(--texto-branco);
+}
+
+.subtitulo {
+    font-size: 1.25rem;
+    color: var(--texto-cinza);
+    margin-bottom: 3rem;
+    font-weight: 400;
+}
+
+/* ================= GRID DETALHES TÉCNICOS ================= */
+.detalhes-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem 1rem;
+    margin-bottom: 4rem;
+}
+
+.detalhe-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.detalhe-item .icone {
+    font-size: 1.5rem;
+    opacity: 0.8;
+}
+
+.detalhe-texto {
+    display: flex;
+    flex-direction: column;
+}
+
+.detalhe-texto strong {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--texto-branco);
+}
+
+.detalhe-texto span {
+    font-size: 0.85rem;
+    color: var(--texto-cinza);
+}
+
+.full-width { grid-column: 1 / -1; } /* Faz a duração ocupar a linha toda */
+
+/* ================= BOTÃO AZUL ================= */
+.btn-grande {
+    width: 100%;
+    background-color: var(--azul-btn);
+    color: var(--texto-branco);
+    border: none;
+    padding: 1.2rem;
+    font-size: 1.1rem;
+    font-weight: 800;
+    border-radius: 8px; /* Borda menos redonda para ficar sério */
+    cursor: pointer;
+    transition: background 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.btn-grande:hover {
+    background-color: var(--azul-btn-hover);
+}
+
+.btn-grande:disabled {
+    background-color: #374151;
+    color: #9CA3AF;
+    cursor: not-allowed;
+}
+
+/* ================= A FOTO GRANDE NA DIREITA ================= */
+.hero-graphic-large {
+    flex-shrink: 0;
+    width: 450px; /* Foto proeminente */
+    height: 550px; /* Foto mais alta */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.hero-graphic-large img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Recorta a imagem sem achatar */
+    border-radius: 12px; /* Cantos arredondados modernos */
+    border: 2px solid var(--verde-neon); /* Borda neon sutil da Alura */
+    box-shadow: 0 0 20px rgba(161, 243, 76, 0.2); /* Brilho neon sutil */
+}
+
+/* ================= SEÇÃO DE APRESENTAÇÃO ================= */
+.conteudo-section {
+    border-top: 1px solid var(--borda-escura);
+    padding-top: 4rem;
+}
+
+.section-title {
+    font-size: 1.1rem;
+    color: var(--texto-branco);
+    margin-bottom: 2.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.info-box {
+    background-color: var(--fundo-caixa);
+    border-radius: 12px;
+    padding: 2.5rem;
+    margin-bottom: 2rem;
+    border: 1px solid var(--borda-escura);
+    position: relative; /* Para os detalhes visuais nos cantos */
+}
+
+.info-box h3 {
+    margin-top: 0;
+    font-size: 1.3rem;
+    margin-bottom: 1.2rem;
+    color: var(--texto-branco);
+}
+
+.info-box p {
+    color: var(--texto-cinza);
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+
+.verde-accent h3 { color: var(--verde-neon); }
+.azul-accent h3 { color: #60A5FA; }
+
+/* Enfeite visual de colchete da Alura no canto superior direito */
+.info-box::after {
+    content: '';
+    position: absolute;
+    top: -1px;
+    right: -1px;
+    width: 25px;
+    height: 25px;
+    border-top: 3px solid var(--verde-neon);
+    border-right: 3px solid var(--verde-neon);
+    border-top-right-radius: 8px;
+}
+
+/* Responsividade (Para Tablet/Celular) */
+@media (max-width: 1000px) {
+    .hero-section {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .hero-graphic-large {
+        width: 100%;
+        height: 400px; /* Foto fica horizontal no celular */
+        margin-top: 3rem;
+    }
+    #detalhe-nome { font-size: 2.8rem; }
+}
+
+@media (max-width: 500px) {
+    .alura-theme-prof { padding: 1rem; }
+    #detalhe-nome { font-size: 2.2rem; }
+    .hero-content { width: 100%; }
+    .detalhes-grid { grid-template-columns: 1fr; gap: 1rem; }
+}
